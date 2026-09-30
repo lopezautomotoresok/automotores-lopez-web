@@ -667,3 +667,12 @@ a.contact-row:hover strong { color: #ff5964; }
   }
   .quick-carousel-controls { display: none !important; }
 }
+
+
+/* V16 — elimina espacio inferior sobrante del bloque de accesos en mobile */
+@media (max-width:700px){
+  .quick-actions-wrap{margin:0!important;padding:0!important;}
+  .quick-actions-bar{margin:0!important;padding:0!important;}
+  .quick-actions-bar .quick-actions.container{margin:0!important;padding:0!important;}
+  .quick-actions-bar .quick-action{margin:0!important;}
+}

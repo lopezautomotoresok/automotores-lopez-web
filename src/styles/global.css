@@ -385,3 +385,17 @@ a.contact-row:hover strong { color: #ff5964; }
   .quick-copy strong{font-size:12px!important}
   .quick-copy small{font-size:11px!important}
 }
+
+
+/* V10 — filtros simplificados */
+.filters.filters-simple {
+  grid-template-columns: 1fr 1fr 1fr 1.55fr;
+  align-items: end;
+}
+.filters-simple .field-search { min-width: 0; }
+@media (max-width: 980px) {
+  .filters.filters-simple { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 700px) {
+  .filters.filters-simple { grid-template-columns: 1fr; }
+}

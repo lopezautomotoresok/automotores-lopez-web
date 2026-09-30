@@ -268,17 +268,6 @@ const anios = [...new Set(autos.map((a) => a.anio))].sort((a,b) => b-a);
                 </select>
               </label>
 
-              <label class="field">
-                <span>Ordenar</span>
-                <select id="sort" class="select">
-                  <option value="featured">Recomendados</option>
-                  <option value="year-desc">Más nuevos</option>
-                  <option value="year-asc">Más antiguos</option>
-                  <option value="price-asc">Menor precio</option>
-                  <option value="price-desc">Mayor precio</option>
-                  <option value="km-asc">Menor kilometraje</option>
-                </select>
-              </label>
             </div>
           </div>
 
@@ -381,38 +370,35 @@ const anios = [...new Set(autos.map((a) => a.anio))].sort((a,b) => b-a);
       </section>
     </main>
 
-    <footer class="site-footer-final">
-      <div class="site-footer-grid">
-        <div class="footer-logo-col">
-          <img src="/images/logo-lopez.png" alt="Lopez Automotores" />
+    <footer class="site-footer-final traditional-footer">
+      <div class="container footer-main">
+        <div class="footer-brand-block">
+          <img src="/images/logo-lopez.png" alt="Lopez Automotores" class="footer-logo" />
           <div class="footer-socials" aria-label="Redes sociales">
-            <a href="https://www.instagram.com/lopez.automotores5/" target="_blank" rel="noreferrer" aria-label="Instagram">IG</a>
-            <a href="https://wa.me/543513489872" target="_blank" rel="noreferrer" aria-label="WhatsApp">WA</a>
+            <a href="https://www.instagram.com/lopez.automotores5/" target="_blank" rel="noreferrer">Instagram</a>
+            <a href="https://wa.me/543513489872" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
         </div>
 
-        <div class="footer-col">
-          <strong>NAVEGACIÓN</strong>
-          <a href="#vehiculos">Stock</a>
+        <div class="footer-links-block">
+          <strong>ENLACES</strong>
+          <a href="#vehiculos">Vehículos</a>
           <a href="#contacto">Ubicación</a>
-          <a href="https://wa.me/543513489872" target="_blank" rel="noreferrer">Contacto</a>
+          <a href="https://wa.me/543513489872?text=Hola%2C%20quiero%20consultar%20por%20financiaci%C3%B3n." target="_blank" rel="noreferrer">Financiación</a>
+          <a href="https://wa.me/543513489872?text=Hola%2C%20quiero%20cotizar%20mi%20usado." target="_blank" rel="noreferrer">Tomamos tu usado</a>
         </div>
 
-        <div class="footer-col">
-          <strong>UNIDADES</strong>
-          <a href="#vehiculos">Usados</a>
-          <a href="#vehiculos">0 KM</a>
-          <a href="#vehiculos">SUV / Pick-up</a>
-        </div>
-
-        <div class="footer-col footer-contact-col">
+        <div class="footer-contact-block">
           <strong>CONTACTO</strong>
           <a href="https://wa.me/543513489872" target="_blank" rel="noreferrer">+54 9 351 348-9872</a>
           <a href="mailto:lopezautomotoresok@gmail.com">lopezautomotoresok@gmail.com</a>
           <a href="https://www.google.com/maps/search/?api=1&query=R%C3%ADo%20de%20Janeiro%201381%2C%20Villa%20Allende%2C%20C%C3%B3rdoba" target="_blank" rel="noreferrer">Río de Janeiro 1381 · Villa Allende</a>
         </div>
       </div>
-      <div class="footer-bottom">© 2026 Lopez Automotores · Villa Allende, Córdoba</div>
+      <div class="container footer-bottom">
+        <span>© 2026 Lopez Automotores</span>
+        <span>Villa Allende · Córdoba</span>
+      </div>
     </footer>
 
     <script>
@@ -420,7 +406,6 @@ const anios = [...new Set(autos.map((a) => a.anio))].sort((a,b) => b-a);
       const brand = document.querySelector('#brand');
       const year = document.querySelector('#year');
       const type = document.querySelector('#type');
-      const sort = document.querySelector('#sort');
       const clearFilters = document.querySelector('#clearFilters');
       const grid = document.querySelector('#grid');
       const visibleCount = document.querySelector('#visibleCount');
@@ -444,40 +429,18 @@ const anios = [...new Set(autos.map((a) => a.anio))].sort((a,b) => b-a);
         });
 
 
-
-        const visibleCards = cards.filter((card) => !card.hidden);
-        const sortValue = sort.value;
-        if (sortValue !== 'featured') {
-          visibleCards.sort((a, b) => {
-            const ay = Number(a.dataset.year);
-            const by = Number(b.dataset.year);
-            const ap = Number(a.dataset.price);
-            const bp = Number(b.dataset.price);
-            const ak = Number(a.dataset.km);
-            const bk = Number(b.dataset.km);
-            if (sortValue === 'year-desc') return by - ay;
-            if (sortValue === 'year-asc') return ay - by;
-            if (sortValue === 'price-asc') return ap - bp;
-            if (sortValue === 'price-desc') return bp - ap;
-            if (sortValue === 'km-asc') return ak - bk;
-            return 0;
-          });
-          visibleCards.forEach((card) => grid.appendChild(card));
-        }
-
         visibleCount.textContent = String(count);
         emptyState.hidden = count !== 0;
       }
 
-      [search, brand, year, type, sort].forEach((el) => el.addEventListener('input', updateCatalog));
-      [brand, year, type, sort].forEach((el) => el.addEventListener('change', updateCatalog));
+      [search, brand, year, type].forEach((el) => el.addEventListener('input', updateCatalog));
+      [brand, year, type].forEach((el) => el.addEventListener('change', updateCatalog));
 
       clearFilters.addEventListener('click', () => {
         search.value = '';
         brand.value = '';
         year.value = '';
         type.value = '';
-        sort.value = 'featured';
         updateCatalog();
         search.focus();
       });

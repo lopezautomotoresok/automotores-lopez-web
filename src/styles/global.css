@@ -470,3 +470,29 @@ a.contact-row:hover strong { color: #ff5964; }
     gap:6px !important;
   }
 }
+
+
+/* V13 — cierre de home: microajustes mobile, footer e iconos */
+.header-whatsapp{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important}
+.header-whatsapp .wa-icon{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+.footer-socials{display:flex!important;align-items:center!important;gap:16px!important;margin-top:20px!important}
+.footer-socials .social-icon{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:auto!important;height:auto!important;min-height:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;color:#c9c9cd!important}
+.footer-socials .social-icon:hover{color:#ef1727!important;border:0!important}
+.footer-socials .social-icon svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block}
+
+@media(max-width:700px){
+  /* El estado queda centrado bajo los CTA */
+  .hero-status{left:50%!important;right:auto!important;transform:translateX(-50%)!important;bottom:16px!important;white-space:nowrap!important}
+  /* Carrusel sin hueco inferior y con una sola línea de separación */
+  .quick-actions-wrap{padding:0!important;margin:0!important;border-top:0!important;border-bottom:1px solid rgba(255,255,255,.08)!important;background:#0b0b0c!important}
+  .quick-actions-bar{padding:14px 0!important;border:0!important;background:#0b0b0c!important}
+  .quick-actions-bar .quick-actions.container{padding-top:0!important;padding-bottom:0!important}
+  .quick-actions-bar .quick-action{min-height:88px!important}
+  /* Footer: logo arriba, Atajos + Contacto lado a lado */
+  .traditional-footer .footer-main{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:28px 18px!important;padding:32px 0 26px!important}
+  .footer-brand-block{grid-column:1 / -1!important}
+  .footer-links-block,.footer-contact-block{min-width:0!important;gap:10px!important}
+  .footer-links-block a,.footer-contact-block a{font-size:12px!important;overflow-wrap:anywhere!important}
+  .footer-links-block strong,.footer-contact-block strong{font-size:11px!important;letter-spacing:.11em!important}
+  .traditional-footer .footer-bottom{padding-top:16px!important}
+}

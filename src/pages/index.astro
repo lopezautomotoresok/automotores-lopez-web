@@ -133,10 +133,8 @@ const anios = [...new Set(autos.map((a) => a.anio))].sort((a,b) => b-a);
       .site-footer-copy{color:#666970;font-size:11px;margin-top:7px}
 
       @media(max-width:700px){
-        .quick-actions-bar{position:relative!important;padding-bottom:38px!important}
-        .quick-carousel-controls{display:flex;position:absolute;left:50%;bottom:7px;transform:translateX(-50%);z-index:5;gap:10px}
-        .quick-carousel-button{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:#16171a;color:#fff;display:grid;place-items:center;font-size:18px;line-height:1;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.28)}
-        .quick-carousel-button:active{transform:scale(.96)}
+        .quick-actions-bar{position:relative!important;padding:0!important}
+        .quick-carousel-controls{display:none!important}
         .site-footer-inner{width:min(100% - 28px,1220px);min-height:auto;align-items:flex-start;flex-direction:column;padding:28px 0}
         .site-footer-brand img{width:138px}
         .site-footer-links{justify-content:flex-start;gap:14px 18px}

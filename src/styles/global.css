@@ -224,3 +224,97 @@ a.contact-row:hover strong { color: #ff5964; }
   .footer-inner { padding: 26px 0; min-height: auto; align-items: flex-start; flex-direction: column; }
   .spec-sections { grid-template-columns:1fr; }
 }
+
+
+/* V4 ajustes visuales solicitados */
+.quick-actions-wrap {
+  margin-top: -26px;
+  padding: 0 0 34px;
+  position: relative;
+  z-index: 5;
+}
+.quick-actions-bar {
+  width: 100%;
+  background: rgba(10,10,11,.96);
+  border-top: 1px solid rgba(255,255,255,.07);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  box-shadow: 0 18px 50px rgba(0,0,0,.24);
+}
+.quick-actions {
+  width: min(1220px, calc(100% - 40px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+}
+.quick-action {
+  min-height: 112px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px 28px;
+  border: 0;
+  border-right: 1px solid rgba(255,255,255,.08);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  text-align: center;
+  transition: background .2s ease, transform .2s ease;
+}
+.quick-action:last-child { border-right: 0; }
+.quick-action:hover {
+  transform: none;
+  border-color: transparent;
+  background: rgba(255,255,255,.035);
+}
+.quick-copy {
+  display: block;
+  width: 100%;
+}
+.quick-copy strong {
+  display: block;
+  margin: 0 0 6px;
+  color: #fff;
+  font-size: 17px;
+  line-height: 1.2;
+  font-weight: 850;
+}
+.quick-copy small {
+  display: block;
+  color: #9b9da3;
+  font-size: 12px;
+  line-height: 1.45;
+}
+.quick-action:hover .quick-copy strong { color: #ff5964; }
+
+.section-head-centered {
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.section-head-centered > div { width: 100%; }
+.section-head-centered .eyebrow,
+.section-head-centered h2,
+.section-head-centered p { text-align: center; }
+.section-head-centered p { margin: 0; }
+
+.badge { display: none !important; }
+
+@media (max-width: 980px) {
+  .quick-actions-wrap { margin-top: -18px; }
+  .quick-actions { grid-template-columns: 1fr; }
+  .quick-action {
+    min-height: 92px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .quick-action:last-child { border-bottom: 0; }
+}
+
+@media (max-width: 700px) {
+  .quick-actions { width: min(100% - 26px, 1220px); }
+  .quick-action { padding: 17px 18px; }
+  .quick-copy strong { font-size: 16px; }
+}

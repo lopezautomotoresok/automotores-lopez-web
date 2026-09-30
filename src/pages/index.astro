@@ -6,6 +6,7 @@ const formatPrice = (value) => value > 0 ? `$${value.toLocaleString('es-AR')}` :
 const formatKm = (value) => `${value.toLocaleString('es-AR')} km`;
 const marcas = [...new Set(autos.map((a) => a.marca))];
 const tipos = [...new Set(autos.map((a) => a.tipo))];
+const anios = [...new Set(autos.map((a) => a.anio))].sort((a,b) => b-a);
 ---
 <!doctype html>
 <html lang="es">
@@ -215,10 +216,6 @@ const tipos = [...new Set(autos.map((a) => a.tipo))];
               </span>
             </a>
           </div>
-          <div class="quick-carousel-controls" aria-label="Controles del carrusel">
-            <button class="quick-carousel-button" id="quickPrev" type="button" aria-label="Anterior">‹</button>
-            <button class="quick-carousel-button" id="quickNext" type="button" aria-label="Siguiente">›</button>
-          </div>
         </div>
       </section>
 
@@ -241,36 +238,34 @@ const tipos = [...new Set(autos.map((a) => a.tipo))];
               <button id="clearFilters" class="clear-button" type="button">Limpiar filtros</button>
             </div>
 
-            <div class="filters">
-              <label class="field field-search">
-                <span>Buscar</span>
-                <input id="search" class="input" type="search" placeholder="Marca, modelo o versión..." />
-              </label>
-
+            <div class="filters filters-simple">
               <label class="field">
                 <span>Marca</span>
                 <select id="brand" class="select">
-                  <option value="">Todas</option>
+                  <option value="">Todas las marcas</option>
                   {marcas.map((marca) => <option value={marca}>{marca}</option>)}
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Año</span>
+                <select id="year" class="select">
+                  <option value="">Todos los años</option>
+                  {anios.map((anio) => <option value={anio}>{anio}</option>)}
                 </select>
               </label>
 
               <label class="field">
                 <span>Tipo</span>
                 <select id="type" class="select">
-                  <option value="">Todos</option>
+                  <option value="">Todos los tipos</option>
                   {tipos.map((tipo) => <option value={tipo}>{tipo}</option>)}
                 </select>
               </label>
 
-              <label class="field">
-                <span>Ordenar</span>
-                <select id="sort" class="select">
-                  <option value="">Relevancia</option>
-                  <option value="year-desc">Más nuevos</option>
-                  <option value="km-asc">Menor kilometraje</option>
-                  <option value="price-asc">Menor precio</option>
-                </select>
+              <label class="field field-search">
+                <span>Buscar</span>
+                <input id="search" class="input" type="search" placeholder="Modelo o versión..." />
               </label>
             </div>
           </div>
@@ -392,8 +387,8 @@ const tipos = [...new Set(autos.map((a) => a.tipo))];
     <script>
       const search = document.querySelector('#search');
       const brand = document.querySelector('#brand');
+      const year = document.querySelector('#year');
       const type = document.querySelector('#type');
-      const sort = document.querySelector('#sort');
       const clearFilters = document.querySelector('#clearFilters');
       const grid = document.querySelector('#grid');
       const visibleCount = document.querySelector('#visibleCount');
@@ -403,48 +398,39 @@ const tipos = [...new Set(autos.map((a) => a.tipo))];
         const cards = [...grid.querySelectorAll('.vehicle-card')];
         const term = search.value.trim().toLowerCase();
         const brandValue = brand.value;
+        const yearValue = year.value;
         const typeValue = type.value;
         let count = 0;
 
         cards.forEach((card) => {
           const visible = (!term || card.dataset.name.includes(term)) &&
             (!brandValue || card.dataset.marca === brandValue) &&
+            (!yearValue || card.dataset.year === yearValue) &&
             (!typeValue || card.dataset.tipo === typeValue);
           card.hidden = !visible;
           if (visible) count++;
         });
 
-        const sorter = sort.value;
-        if (sorter) {
-          const sorted = cards.sort((a, b) => {
-            if (sorter === 'year-desc') return Number(b.dataset.year) - Number(a.dataset.year);
-            if (sorter === 'km-asc') return Number(a.dataset.km) - Number(b.dataset.km);
-            if (sorter === 'price-asc') return Number(a.dataset.price) - Number(b.dataset.price);
-            return 0;
-          });
-          sorted.forEach((card) => grid.appendChild(card));
-        }
+
 
         visibleCount.textContent = String(count);
         emptyState.hidden = count !== 0;
       }
 
-      [search, brand, type, sort].forEach((el) => el.addEventListener('input', updateCatalog));
-      [brand, type, sort].forEach((el) => el.addEventListener('change', updateCatalog));
+      [search, brand, year, type].forEach((el) => el.addEventListener('input', updateCatalog));
+      [brand, year, type].forEach((el) => el.addEventListener('change', updateCatalog));
 
       clearFilters.addEventListener('click', () => {
         search.value = '';
         brand.value = '';
+        year.value = '';
         type.value = '';
-        sort.value = '';
         updateCatalog();
         search.focus();
       });
 
       const quickTrack = document.querySelector('.quick-actions');
       const quickCards = quickTrack ? [...quickTrack.querySelectorAll('.quick-action')] : [];
-      const quickPrev = document.querySelector('#quickPrev');
-      const quickNext = document.querySelector('#quickNext');
       let quickIndex = 0;
       let quickTimer;
 
@@ -464,8 +450,6 @@ const tipos = [...new Set(autos.map((a) => a.tipo))];
         quickTimer = setInterval(() => goToQuick(quickIndex + 1), 4500);
       }
 
-      quickPrev?.addEventListener('click', () => { goToQuick(quickIndex - 1); startQuickAutoplay(); });
-      quickNext?.addEventListener('click', () => { goToQuick(quickIndex + 1); startQuickAutoplay(); });
       quickTrack?.addEventListener('touchstart', () => clearInterval(quickTimer), { passive: true });
       quickTrack?.addEventListener('touchend', startQuickAutoplay, { passive: true });
       quickTrack?.addEventListener('scroll', () => {

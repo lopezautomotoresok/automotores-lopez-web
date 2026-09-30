@@ -74,6 +74,52 @@ const tipos = [...new Set(autos.map((a) => a.tipo))];
         .showroom-card{width:min(100% - 26px,1220px);border-radius:22px 22px 0 0}
         .showroom-info{padding:30px 24px}.showroom-map{min-height:390px}.contact-row{grid-template-columns:50px 1fr}.contact-icon{width:46px;height:46px}.contact-icon svg{width:24px;height:24px}
       }
+
+      /* V8: mobile carousel + WhatsApp header */
+      .header-whatsapp{background:#25D366!important;color:#fff!important;box-shadow:0 10px 28px rgba(37,211,102,.22)!important}
+      .header-whatsapp:hover{background:#20bd5a!important;color:#fff!important}
+
+      @media(max-width:700px){
+        .quick-actions-wrap{overflow:hidden!important}
+        .quick-actions-bar{overflow:hidden!important}
+        .quick-actions-bar .quick-actions.container{
+          width:100%!important;
+          max-width:none!important;
+          margin:0!important;
+          padding:0 18px!important;
+          display:grid!important;
+          grid-template-columns:none!important;
+          grid-auto-flow:column!important;
+          grid-auto-columns:84vw!important;
+          gap:12px!important;
+          overflow-x:auto!important;
+          overflow-y:hidden!important;
+          scroll-snap-type:x mandatory!important;
+          scroll-padding-left:18px!important;
+          overscroll-behavior-x:contain!important;
+          -webkit-overflow-scrolling:touch!important;
+          scrollbar-width:none!important;
+          touch-action:pan-x!important;
+        }
+        .quick-actions-bar .quick-actions.container::-webkit-scrollbar{display:none!important}
+        .quick-actions-bar .quick-action{
+          width:100%!important;
+          min-width:0!important;
+          flex:none!important;
+          min-height:88px!important;
+          margin:0!important;
+          padding:15px 18px!important;
+          border:1px solid rgba(255,255,255,.09)!important;
+          border-radius:14px!important;
+          background:rgba(16,16,18,.96)!important;
+          scroll-snap-align:start!important;
+          scroll-snap-stop:always!important;
+        }
+        .quick-actions-bar .quick-action:last-child{margin-right:18px!important}
+        .quick-actions-bar .quick-copy{width:100%!important;text-align:center!important}
+        .quick-actions-bar .quick-copy strong{font-size:12px!important;letter-spacing:.12em!important;color:#ff4b57!important;text-transform:uppercase!important}
+        .quick-actions-bar .quick-copy small{font-size:11px!important;line-height:1.35!important;color:#b0b1b6!important}
+      }
     </style>
   </head>
 
@@ -91,7 +137,7 @@ const tipos = [...new Set(autos.map((a) => a.tipo))];
           <a href="#contacto">Contacto</a>
         </nav>
 
-        <a class="button button-small button-red" href="https://wa.me/543513489872" target="_blank" rel="noreferrer">
+        <a class="button button-small header-whatsapp" href="https://wa.me/543513489872" target="_blank" rel="noreferrer">
           WhatsApp
         </a>
       </div>

@@ -344,3 +344,19 @@ a.contact-row:hover strong { color: #ff5964; }
   .contact-icon { width: 40px !important; height: 40px !important; min-width: 40px !important; }
   .contact-icon svg { width: 20px !important; height: 20px !important; }
 }
+
+
+/* V6 final overrides: barra compacta, logo real, mapa natural */
+.brand-logo{display:block!important}.site-header .brand{display:none!important}
+.quick-actions-wrap{margin-top:0!important;padding:0!important}
+.quick-actions{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:0!important}
+.quick-action{min-height:72px!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;border-top:0!important;border-bottom:0!important}
+.showroom-map iframe{filter:none!important;opacity:1!important}
+.showroom-map::after{display:none!important}
+.badge{display:none!important}
+.section-head-centered{justify-content:center!important;text-align:center!important;flex-direction:column!important;align-items:center!important;gap:10px!important}
+.section-head-centered>div{width:100%!important}.section-head-centered .eyebrow,.section-head-centered h2,.section-head-centered p{text-align:center!important}.section-head-centered p{margin:0!important}
+@media(max-width:700px){
+  .quick-actions{display:flex!important;width:100%!important;overflow-x:auto!important;scroll-snap-type:x mandatory!important;gap:0!important;padding:0 12px!important}
+  .quick-action{flex:0 0 82%!important;min-height:68px!important;border-right:1px solid rgba(255,255,255,.08)!important;border-bottom:0!important;scroll-snap-align:center!important}
+}

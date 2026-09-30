@@ -318,3 +318,29 @@ a.contact-row:hover strong { color: #ff5964; }
   .quick-action { padding: 17px 18px; }
   .quick-copy strong { font-size: 16px; }
 }
+
+
+/* V5 — navegación compacta + iconografía responsive + mapa claro */
+.quick-actions-wrap { margin-top: -24px !important; padding: 0 0 28px !important; }
+.quick-actions-bar { background: transparent !important; border: 0 !important; }
+.quick-actions { width: min(900px, calc(100% - 32px)) !important; margin: 0 auto !important; display: flex !important; justify-content: center !important; align-items: center !important; gap: 10px !important; flex-wrap: wrap !important; }
+.quick-action { min-height: 44px !important; width: auto !important; padding: 0 18px !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; border: 1px solid rgba(255,255,255,.12) !important; border-radius: 999px !important; background: rgba(17,18,21,.96) !important; box-shadow: 0 8px 24px rgba(0,0,0,.22) !important; }
+.quick-action:hover { transform: translateY(-2px) !important; border-color: rgba(240,42,55,.48) !important; background: #1b1c20 !important; }
+.quick-copy { text-align: center !important; }
+.quick-copy strong { margin: 0 !important; font-size: 13px !important; line-height: 1 !important; white-space: nowrap !important; }
+.quick-copy small { display: none !important; }
+.quick-action::after { content: none !important; }
+
+.contact-icon { width: 44px !important; height: 44px !important; min-width: 44px !important; padding: 0 !important; overflow: hidden; }
+.contact-icon svg { width: 22px; height: 22px; display: block; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.showroom-map iframe { filter: saturate(.92) contrast(1.02) brightness(.98) !important; opacity: 1 !important; }
+.showroom-map::after { background: linear-gradient(90deg, rgba(20,21,24,.08), transparent 24%) !important; }
+
+@media (max-width: 700px) {
+  .quick-actions-wrap { margin-top: -14px !important; padding-bottom: 22px !important; }
+  .quick-actions { width: min(100% - 24px, 900px) !important; gap: 8px !important; }
+  .quick-action { min-height: 40px !important; padding: 0 13px !important; }
+  .quick-copy strong { font-size: 12px !important; }
+  .contact-icon { width: 40px !important; height: 40px !important; min-width: 40px !important; }
+  .contact-icon svg { width: 20px !important; height: 20px !important; }
+}

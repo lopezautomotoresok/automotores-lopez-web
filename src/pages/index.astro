@@ -28,7 +28,7 @@ const formatKm = (value) => `${value.toLocaleString('es-AR')} km`;
     </header>
 
     <main>
-      <section class="hero">
+      <section class="hero hero-photo">
         <div class="container">
           <div class="hero-card">
             <div>
@@ -76,7 +76,7 @@ const formatKm = (value) => `${value.toLocaleString('es-AR')} km`;
                 <h3>{auto.marca} {auto.modelo}</h3>
                 <div class="meta">{auto.anio} · {formatKm(auto.km)} · {auto.tipo}</div>
                 <div class="price">{formatPrice(auto.precio)}</div>
-                <a class="card-link" href={`https://wa.me/543513489872?text=${encodeURIComponent(`Hola, estoy consultando por el ${auto.marca} ${auto.modelo} ${auto.anio} que vi en la web.`)}`} target="_blank" rel="noreferrer">Consultar por WhatsApp</a>
+                <a class="card-link" href={`/vehiculos/${auto.id}`}>Ver vehículo</a>
               </div>
             </article>
           ))}

@@ -360,3 +360,28 @@ a.contact-row:hover strong { color: #ff5964; }
   .quick-actions{display:flex!important;width:100%!important;overflow-x:auto!important;scroll-snap-type:x mandatory!important;gap:0!important;padding:0 12px!important}
   .quick-action{flex:0 0 82%!important;min-height:68px!important;border-right:1px solid rgba(255,255,255,.08)!important;border-bottom:0!important;scroll-snap-align:center!important}
 }
+
+
+/* V7 final — barra tipo stats + logo definitivo */
+.brand-logo{display:block!important;width:178px!important;height:auto!important;aspect-ratio:auto!important;overflow:visible!important}
+.brand-logo img{position:static!important;display:block!important;width:100%!important;height:auto!important;object-fit:contain!important;filter:none!important;clip-path:none!important}
+.quick-actions-wrap{margin-top:0!important;padding:0!important;background:#0b0b0c!important;border-top:1px solid rgba(255,255,255,.07)!important;border-bottom:1px solid rgba(255,255,255,.07)!important;overflow:hidden!important}
+.quick-actions-bar{background:radial-gradient(circle at 13% 35%,rgba(207,23,37,.14) 0 2px,transparent 3px),radial-gradient(circle at 82% 68%,rgba(255,255,255,.10) 0 2px,transparent 3px),radial-gradient(circle at 54% 18%,rgba(255,255,255,.08) 0 1.5px,transparent 2.5px),linear-gradient(180deg,#101012 0%,#0b0b0c 100%)!important}
+.quick-actions{width:min(1100px,calc(100% - 40px))!important;margin:0 auto!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:0!important;padding:0!important}
+.quick-action{min-height:88px!important;width:auto!important;padding:14px 24px!important;display:flex!important;align-items:center!important;justify-content:center!important;background:transparent!important;border:0!important;border-right:1px solid rgba(255,255,255,.10)!important;border-radius:0!important;box-shadow:none!important;transform:none!important}
+.quick-action:last-child{border-right:0!important}
+.quick-action:hover{background:rgba(255,255,255,.025)!important;transform:none!important}
+.quick-copy{text-align:center!important;width:100%!important}
+.quick-copy strong{display:block!important;margin:0 0 5px!important;color:#ef1727!important;font-size:13px!important;line-height:1.1!important;font-weight:900!important;letter-spacing:.08em!important;text-transform:uppercase!important;white-space:normal!important}
+.quick-copy small{display:block!important;margin:0!important;color:#c7c8cc!important;font-size:12px!important;line-height:1.35!important;font-weight:650!important}
+.quick-action:hover .quick-copy small{color:#fff!important}
+@media(max-width:700px){
+  .brand-logo{width:145px!important}
+  .quick-actions{width:100%!important;display:flex!important;overflow-x:auto!important;scroll-snap-type:x mandatory!important;scrollbar-width:none!important;padding:0 18px!important;gap:0!important;overscroll-behavior-x:contain!important;-webkit-overflow-scrolling:touch!important}
+  .quick-actions::-webkit-scrollbar{display:none!important}
+  .quick-action{flex:0 0 82%!important;min-height:84px!important;padding:13px 18px!important;border-right:1px solid rgba(255,255,255,.10)!important;scroll-snap-align:center!important;scroll-snap-stop:always!important}
+  .quick-action:first-child{border-left:1px solid rgba(255,255,255,.10)!important}
+  .quick-action:last-child{margin-right:18px!important}
+  .quick-copy strong{font-size:12px!important}
+  .quick-copy small{font-size:11px!important}
+}

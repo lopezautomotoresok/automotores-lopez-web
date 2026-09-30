@@ -76,8 +76,8 @@ const tipos = [...new Set(autos.map((a) => a.tipo))];
       }
 
       /* V8: mobile carousel + WhatsApp header */
-      .header-whatsapp{background:#25D366!important;color:#fff!important;box-shadow:0 10px 28px rgba(37,211,102,.22)!important}
-      .header-whatsapp:hover{background:#20bd5a!important;color:#fff!important}
+      .header-whatsapp{background:#25D366!important;color:#0a0a0b!important;box-shadow:0 10px 28px rgba(37,211,102,.22)!important;font-weight:900!important}
+      .header-whatsapp:hover{background:#20bd5a!important;color:#0a0a0b!important}
 
       @media(max-width:700px){
         .quick-actions-wrap{overflow:hidden!important}
@@ -119,6 +119,26 @@ const tipos = [...new Set(autos.map((a) => a.tipo))];
         .quick-actions-bar .quick-copy{width:100%!important;text-align:center!important}
         .quick-actions-bar .quick-copy strong{font-size:12px!important;letter-spacing:.12em!important;color:#ff4b57!important;text-transform:uppercase!important}
         .quick-actions-bar .quick-copy small{font-size:11px!important;line-height:1.35!important;color:#b0b1b6!important}
+      }
+
+      /* V9: controles del carrusel mobile + footer final */
+      .quick-carousel-controls{display:none}
+      .site-footer-final{border-top:1px solid rgba(255,255,255,.08);background:#080809}
+      .site-footer-inner{width:min(1220px,calc(100% - 40px));margin:0 auto;min-height:112px;display:flex;align-items:center;justify-content:space-between;gap:28px;padding:24px 0}
+      .site-footer-brand img{display:block;width:150px;height:auto}
+      .site-footer-links{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:flex-end}
+      .site-footer-links a{color:#a7a9ae;font-size:12px;font-weight:700;text-decoration:none}
+      .site-footer-links a:hover{color:#fff}
+      .site-footer-copy{color:#666970;font-size:11px;margin-top:7px}
+
+      @media(max-width:700px){
+        .quick-actions-bar{position:relative!important;padding-bottom:38px!important}
+        .quick-carousel-controls{display:flex;position:absolute;left:50%;bottom:7px;transform:translateX(-50%);z-index:5;gap:10px}
+        .quick-carousel-button{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:#16171a;color:#fff;display:grid;place-items:center;font-size:18px;line-height:1;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.28)}
+        .quick-carousel-button:active{transform:scale(.96)}
+        .site-footer-inner{width:min(100% - 28px,1220px);min-height:auto;align-items:flex-start;flex-direction:column;padding:28px 0}
+        .site-footer-brand img{width:138px}
+        .site-footer-links{justify-content:flex-start;gap:14px 18px}
       }
     </style>
   </head>
@@ -194,6 +214,10 @@ const tipos = [...new Set(autos.map((a) => a.tipo))];
                 <small>Podés entregarlo como parte de pago</small>
               </span>
             </a>
+          </div>
+          <div class="quick-carousel-controls" aria-label="Controles del carrusel">
+            <button class="quick-carousel-button" id="quickPrev" type="button" aria-label="Anterior">‹</button>
+            <button class="quick-carousel-button" id="quickNext" type="button" aria-label="Siguiente">›</button>
           </div>
         </div>
       </section>
@@ -350,7 +374,20 @@ const tipos = [...new Set(autos.map((a) => a.tipo))];
       </section>
     </main>
 
-
+    <footer class="site-footer-final">
+      <div class="site-footer-inner">
+        <div class="site-footer-brand">
+          <img src="/images/logo-lopez.png" alt="Lopez Automotores" />
+          <div class="site-footer-copy">© 2026 Lopez Automotores · Villa Allende, Córdoba</div>
+        </div>
+        <div class="site-footer-links">
+          <a href="#vehiculos">Vehículos</a>
+          <a href="https://wa.me/543513489872?text=Hola%2C%20quiero%20consultar%20por%20opciones%20de%20financiaci%C3%B3n." target="_blank" rel="noreferrer">Financiación</a>
+          <a href="https://wa.me/543513489872?text=Hola%2C%20quiero%20consultar%20por%20entregar%20mi%20veh%C3%ADculo%20como%20parte%20de%20pago." target="_blank" rel="noreferrer">Vendé tu auto</a>
+          <a href="#contacto">Contacto</a>
+        </div>
+      </div>
+    </footer>
 
     <script>
       const search = document.querySelector('#search');
@@ -403,6 +440,48 @@ const tipos = [...new Set(autos.map((a) => a.tipo))];
         updateCatalog();
         search.focus();
       });
+
+      const quickTrack = document.querySelector('.quick-actions');
+      const quickCards = quickTrack ? [...quickTrack.querySelectorAll('.quick-action')] : [];
+      const quickPrev = document.querySelector('#quickPrev');
+      const quickNext = document.querySelector('#quickNext');
+      let quickIndex = 0;
+      let quickTimer;
+
+      function isQuickMobile() {
+        return window.matchMedia('(max-width: 700px)').matches;
+      }
+
+      function goToQuick(index) {
+        if (!quickTrack || !quickCards.length || !isQuickMobile()) return;
+        quickIndex = (index + quickCards.length) % quickCards.length;
+        quickTrack.scrollTo({ left: quickCards[quickIndex].offsetLeft - 18, behavior: 'smooth' });
+      }
+
+      function startQuickAutoplay() {
+        clearInterval(quickTimer);
+        if (!isQuickMobile()) return;
+        quickTimer = setInterval(() => goToQuick(quickIndex + 1), 4500);
+      }
+
+      quickPrev?.addEventListener('click', () => { goToQuick(quickIndex - 1); startQuickAutoplay(); });
+      quickNext?.addEventListener('click', () => { goToQuick(quickIndex + 1); startQuickAutoplay(); });
+      quickTrack?.addEventListener('touchstart', () => clearInterval(quickTimer), { passive: true });
+      quickTrack?.addEventListener('touchend', startQuickAutoplay, { passive: true });
+      quickTrack?.addEventListener('scroll', () => {
+        if (!isQuickMobile() || !quickCards.length) return;
+        const x = quickTrack.scrollLeft + quickTrack.clientWidth / 2;
+        let nearest = 0;
+        let distance = Infinity;
+        quickCards.forEach((card, i) => {
+          const center = card.offsetLeft + card.offsetWidth / 2;
+          const d = Math.abs(center - x);
+          if (d < distance) { distance = d; nearest = i; }
+        });
+        quickIndex = nearest;
+      }, { passive: true });
+      window.addEventListener('resize', startQuickAutoplay);
+      startQuickAutoplay();
     </script>
   </body>
 </html>

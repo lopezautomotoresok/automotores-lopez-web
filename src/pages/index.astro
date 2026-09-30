@@ -17,18 +17,15 @@ const tipos = [...new Set(autos.map((a) => a.tipo))];
     <title>Automotores Lopez | Vehículos seleccionados</title>
 
     <style>
-      /* V3: layout crítico de accesos y showroom, autocontenido */
-      .quick-actions-wrap{position:relative;z-index:5;margin-top:-34px;padding:0 0 34px;}
-      .quick-actions{width:min(1220px,calc(100% - 40px));margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
-      .quick-action{min-height:126px;display:grid;grid-template-columns:48px 1fr 28px;align-items:center;gap:16px;padding:22px 24px;border:1px solid rgba(255,255,255,.10);border-radius:20px;background:linear-gradient(145deg,rgba(28,29,33,.98),rgba(15,16,18,.98));box-shadow:0 18px 50px rgba(0,0,0,.32);transition:.22s ease;}
-      .quick-action:hover{transform:translateY(-4px);border-color:rgba(240,42,55,.52);background:linear-gradient(145deg,#202126,#141518);}
-      .quick-icon{width:46px;height:46px;display:grid;place-items:center;border-radius:14px;background:rgba(207,23,37,.14);border:1px solid rgba(240,42,55,.18);color:#ff4b57;font-size:12px;font-weight:900;letter-spacing:.08em;}
-      .quick-copy{display:block;min-width:0;}
-      .quick-copy strong{display:block;margin:0 0 7px;color:#fff;font-size:16px;line-height:1.15;font-weight:850;}
-      .quick-copy small{display:block;color:#9b9da3;font-size:12px;line-height:1.45;}
-      .quick-arrow{color:#ff4b57;font-size:22px;font-weight:700;transition:transform .22s ease;}
-      .quick-action:hover .quick-arrow{transform:translateX(4px);}
-
+      /* Accesos rápidos compactos */
+      .quick-actions-wrap{position:relative;z-index:5;margin-top:-24px;padding:0 0 28px;}
+      .quick-actions-bar{width:100%;}
+      .quick-actions{width:min(900px,calc(100% - 32px));margin:0 auto;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;}
+      .quick-action{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(17,18,21,.94);box-shadow:0 8px 24px rgba(0,0,0,.22);transition:.2s ease;}
+      .quick-action:hover{transform:translateY(-2px);border-color:rgba(240,42,55,.52);background:#1a1b1f;}
+      .quick-copy{display:block;text-align:center;white-space:nowrap;}
+      .quick-copy strong{display:block;color:#fff;font-size:13px;line-height:1;font-weight:800;}
+      .quick-copy small{display:none;}
       .showroom-section{padding:10px 0 86px;}
       .showroom-card{width:min(1220px,calc(100% - 40px));margin:0 auto;overflow:hidden;display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);border:1px solid rgba(255,255,255,.10);border-radius:26px;background:#141518;box-shadow:0 28px 80px rgba(0,0,0,.34);}
       .showroom-info{padding:46px 48px 44px;}
@@ -42,13 +39,13 @@ const tipos = [...new Set(autos.map((a) => a.tipo))];
       .contact-row strong{display:block;color:#f4f4f5;font-size:15px;line-height:1.42;font-weight:700;}
       a.contact-row:hover strong{color:#ff5964;}
       .showroom-map{position:relative;min-height:575px;background:#0f1012;overflow:hidden;}
-      .showroom-map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:grayscale(1) brightness(.66) contrast(1.12);}
-      .showroom-map:after{content:'';pointer-events:none;position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,21,24,.22),transparent 32%);}
+      .showroom-map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:saturate(.9) contrast(1.02) brightness(.98);}
+      .showroom-map:after{content:'';pointer-events:none;position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,21,24,.08),transparent 24%);}
       .map-open{position:absolute;z-index:3;right:20px;bottom:20px;padding:12px 16px;border:1px solid rgba(255,255,255,.14);border-radius:11px;background:rgba(8,8,9,.86);color:#fff;font-size:12px;font-weight:800;backdrop-filter:blur(10px);}
       .map-open:hover{background:#cf1725;border-color:#cf1725;}
 
-      @media(max-width:980px){.quick-actions{grid-template-columns:1fr;margin-top:0}.quick-actions-wrap{margin-top:-22px}.showroom-card{grid-template-columns:1fr}.showroom-map{min-height:430px}}
-      @media(max-width:700px){.quick-actions,.showroom-card{width:min(100% - 26px,1220px)}.quick-action{min-height:104px;grid-template-columns:42px 1fr 24px;padding:17px}.quick-icon{width:40px;height:40px}.showroom-info{padding:30px 24px}.showroom-map{min-height:360px}.contact-row{grid-template-columns:44px 1fr}}
+      @media(max-width:980px){.quick-actions-wrap{margin-top:-18px}.showroom-card{grid-template-columns:1fr}.showroom-map{min-height:430px}}
+      @media(max-width:700px){.quick-actions{width:min(100% - 24px,900px);gap:8px}.quick-action{min-height:42px;padding:0 14px}.quick-copy strong{font-size:12px}.showroom-card{width:min(100% - 26px,1220px)}.showroom-info{padding:30px 24px}.showroom-map{min-height:360px}.contact-row{grid-template-columns:44px 1fr}}
     </style>
   </head>
 
@@ -241,27 +238,27 @@ const tipos = [...new Set(autos.map((a) => a.tipo))];
 
             <div class="contact-list">
               <a class="contact-row" href="https://www.google.com/maps/search/?api=1&query=R%C3%ADo%20de%20Janeiro%201381%2C%20Villa%20Allende%2C%20C%C3%B3rdoba" target="_blank" rel="noreferrer">
-                <span class="contact-icon" aria-hidden="true">⌖</span>
+                <span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s6-5.2 6-12A6 6 0 0 0 6 9c0 6.8 6 12 6 12Z"/><circle cx="12" cy="9" r="2.2"/></svg></span>
                 <span><small>DIRECCIÓN</small><strong>Río de Janeiro 1381, Villa Allende · Córdoba</strong></span>
               </a>
 
               <div class="contact-row">
-                <span class="contact-icon" aria-hidden="true">◷</span>
+                <span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg></span>
                 <span><small>HORARIO</small><strong>Lunes a Viernes · 9:00 a 19:00<br />Sábados · 9:00 a 13:00</strong></span>
               </div>
 
               <a class="contact-row" href="https://wa.me/543513489872" target="_blank" rel="noreferrer">
-                <span class="contact-icon" aria-hidden="true">✆</span>
+                <span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M7.5 4.5 5 6.2c-.7.5-.9 1.4-.6 2.2 1.7 4.6 5.3 8.2 9.9 9.9.8.3 1.7.1 2.2-.6l1.7-2.5-3.6-2-1.5 1.5c-2.2-1-3.9-2.7-4.9-4.9l1.5-1.5-2.2-3.8Z"/></svg></span>
                 <span><small>WHATSAPP</small><strong>351 348-9872</strong></span>
               </a>
 
               <a class="contact-row" href="mailto:automotorlopez@gmail.com">
-                <span class="contact-icon" aria-hidden="true">✉</span>
+                <span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="m5 8 7 5 7-5"/></svg></span>
                 <span><small>EMAIL</small><strong>automotorlopez@gmail.com</strong></span>
               </a>
 
               <a class="contact-row" href="https://www.instagram.com/lopez.automotores5/" target="_blank" rel="noreferrer">
-                <span class="contact-icon" aria-hidden="true">◎</span>
+                <span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="5" width="14" height="14" rx="4"/><circle cx="12" cy="12" r="3.2"/><circle cx="16.8" cy="7.4" r=".8" fill="currentColor" stroke="none"/></svg></span>
                 <span><small>INSTAGRAM</small><strong>@lopez.automotores5</strong></span>
               </a>
             </div>

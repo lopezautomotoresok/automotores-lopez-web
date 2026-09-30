@@ -600,3 +600,70 @@ a.contact-row:hover strong { color: #ff5964; }
   .social-icon { width:40px !important; height:40px !important; min-width:40px !important; }
   .social-icon svg { width:22px !important; height:22px !important; }
 }
+
+
+/* V15 — mobile usa el mismo lenguaje visual de desktop, sin carrusel */
+@media (max-width: 700px) {
+  .quick-actions-wrap {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: #0b0b0c !important;
+    border-top: 1px solid rgba(255,255,255,.07) !important;
+    border-bottom: 1px solid rgba(255,255,255,.07) !important;
+  }
+  .quick-actions-bar {
+    padding: 0 !important;
+    background: linear-gradient(180deg,#101012 0%,#0b0b0c 100%) !important;
+    overflow: visible !important;
+  }
+  .quick-actions-bar .quick-actions.container {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+    overflow: visible !important;
+    scroll-snap-type: none !important;
+  }
+  .quick-actions-bar .quick-action {
+    width: 100% !important;
+    min-height: 62px !important;
+    margin: 0 !important;
+    padding: 12px 18px !important;
+    border: 0 !important;
+    border-bottom: 1px solid rgba(255,255,255,.08) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .quick-actions-bar .quick-action:last-child {
+    border-bottom: 0 !important;
+  }
+  .quick-actions-bar .quick-copy {
+    width: 100% !important;
+    text-align: center !important;
+  }
+  .quick-actions-bar .quick-copy strong {
+    display: block !important;
+    margin: 0 0 3px !important;
+    color: #ef1727 !important;
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+    letter-spacing: .10em !important;
+    text-transform: uppercase !important;
+  }
+  .quick-actions-bar .quick-copy small {
+    display: block !important;
+    margin: 0 !important;
+    color: #b9bbc0 !important;
+    font-size: 10.5px !important;
+    line-height: 1.3 !important;
+  }
+  .quick-carousel-controls { display: none !important; }
+}

@@ -12,3 +12,4 @@
 - En Cloudflare: Workers & Pages > Create application > Pages > Import an existing Git repository.
 - Build command: `npm run build`
 - Build directory: `dist`
+deploy nuevo

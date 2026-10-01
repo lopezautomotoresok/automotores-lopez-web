@@ -879,3 +879,81 @@ a.contact-row:hover strong { color: #ff5964; }
   .vehicle-footer-premium .price{font-size:23px!important;}
   .vehicle-cta{width:100%!important;min-height:48px!important;font-size:12.5px!important;}
 }
+
+
+/* V18 — ajuste fino de tarjetas: datos sin tags y pie perfectamente alineado */
+.vehicle-title-block{
+  min-height:auto!important;
+  margin-bottom:18px!important;
+}
+.vehicle-specs-clean{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  gap:8px 0!important;
+  margin:0!important;
+  padding:0!important;
+  color:#aeb0b5!important;
+  font-size:12px!important;
+  line-height:1.4!important;
+}
+.vehicle-specs-clean span{
+  display:inline-flex!important;
+  align-items:center!important;
+  padding:0!important;
+  margin:0!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  white-space:nowrap!important;
+}
+.vehicle-specs-clean span:not(:last-child)::after{
+  content:"•";
+  margin:0 9px!important;
+  color:#55585f!important;
+  font-size:10px!important;
+}
+.vehicle-footer-premium{
+  margin-top:22px!important;
+  padding-top:18px!important;
+  border-top:1px solid rgba(255,255,255,.08)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:18px!important;
+}
+.vehicle-price-block{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  min-width:0!important;
+}
+.vehicle-price-block small{
+  margin:0 0 6px!important;
+}
+.vehicle-footer-premium .price{
+  margin:0!important;
+  line-height:1.05!important;
+  white-space:nowrap!important;
+}
+.vehicle-cta{
+  flex:0 0 auto!important;
+  align-self:center!important;
+  min-width:150px!important;
+}
+
+@media(max-width:700px){
+  .vehicle-title-block{margin-bottom:15px!important;}
+  .vehicle-specs-clean{font-size:11.5px!important;gap:7px 0!important;}
+  .vehicle-specs-clean span:not(:last-child)::after{margin:0 7px!important;}
+  .vehicle-footer-premium{
+    margin-top:18px!important;
+    padding-top:16px!important;
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    align-items:stretch!important;
+    gap:14px!important;
+  }
+  .vehicle-footer-premium .price{white-space:normal!important;}
+  .vehicle-cta{width:100%!important;min-width:0!important;}
+}

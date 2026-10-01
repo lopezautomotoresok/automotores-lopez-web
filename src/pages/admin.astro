@@ -92,32 +92,11 @@ const pageTitle = 'Administración · Lopez Automotores';
       @media (max-width:1050px) { .form-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .span-4 { grid-column:1/-1; } }
       @media (max-width:650px) { .topbar { min-height:64px; padding:10px 16px; } .brand img { width:145px; } .brand small { display:none; } main { width:min(100% - 20px,1280px); padding-top:22px; } .dash-head { align-items:stretch; flex-direction:column; } .vehicle-card { grid-template-columns:96px minmax(0,1fr) !important; min-height:94px; max-height:none; } .vehicle-thumb { width:96px; min-width:96px; min-height:94px; } .vehicle-card-body { padding:10px 11px; } .vehicle-card h3 { font-size:15px; } .meta { white-space:normal; font-size:11px; } .vehicle-card .vehicle-actions { overflow-x:auto; padding-bottom:2px; } .vehicle-card .vehicle-actions .btn { min-height:31px; padding:0 8px; font-size:10px; } .form-grid { grid-template-columns:1fr; } .span-2,.span-4 { grid-column:auto; } .section-title { grid-column:auto; } .photo-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; } .photo-item { width:100%; max-width:none; } .photo-thumb { height:auto; aspect-ratio:4/3; } .form-actions { flex-direction:column-reverse; } .form-actions .btn { width:100%; } }
 
-      /* V32: controles compactos y aislados para evitar que otras reglas agranden imágenes */
-      .vehicle-list { display:flex !important; flex-direction:column !important; gap:10px !important; }
-      .vehicle-card { display:grid !important; grid-template-columns:132px minmax(0,1fr) !important; min-height:92px !important; max-height:none !important; overflow:hidden !important; padding:0 !important; border:1px solid var(--line) !important; border-radius:14px !important; background:#111315 !important; }
-      .vehicle-thumb-img { width:132px !important; height:100% !important; min-height:92px !important; max-height:104px !important; object-fit:cover !important; display:block !important; border-right:1px solid var(--line) !important; }
-      .vehicle-card-body { padding:10px 12px !important; display:grid !important; grid-template-columns:minmax(0,1fr) auto !important; grid-template-areas:'badges actions' 'title actions' 'meta actions' !important; align-content:center !important; column-gap:14px !important; min-width:0 !important; }
-      .vehicle-card h3 { grid-area:title !important; margin:2px 0 4px !important; font-size:16px !important; line-height:1.2 !important; }
-      .vehicle-card .meta { grid-area:meta !important; margin:0 !important; font-size:12px !important; white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important; }
-      .vehicle-card .badges { grid-area:badges !important; margin:0 0 2px !important; }
-      .vehicle-card .vehicle-actions { grid-area:actions !important; display:flex !important; flex-wrap:wrap !important; justify-content:flex-end !important; align-content:center !important; max-width:270px !important; gap:6px !important; }
-      .vehicle-card .vehicle-actions .btn { min-height:32px !important; padding:0 9px !important; font-size:11px !important; }
-
-      .photo-zone { padding:14px !important; }
-      .photo-grid { display:grid !important; grid-template-columns:repeat(auto-fill,minmax(120px,140px)) !important; gap:10px !important; align-items:start !important; justify-content:start !important; margin-top:14px !important; }
-      .photo-item { width:100% !important; max-width:140px !important; min-width:0 !important; border-radius:10px !important; overflow:hidden !important; background:#0b0d0f !important; border:1px solid #2d3035 !important; }
-      .photo-thumb { width:100% !important; height:auto !important; aspect-ratio:4/3 !important; overflow:hidden !important; position:relative !important; background:#050606 !important; }
-      .photo-thumb img { width:100% !important; height:100% !important; max-width:100% !important; max-height:100% !important; object-fit:cover !important; display:block !important; }
-      .photo-tools { display:grid !important; grid-template-columns:30px 30px minmax(0,1fr) !important; gap:4px !important; padding:6px !important; }
-      .photo-tools button { height:28px !important; min-height:28px !important; padding:0 5px !important; font-size:10px !important; }
-      .photo-tools .remove-photo { grid-column:1/-1 !important; }
-      @media (max-width:700px) {
-        .vehicle-card { grid-template-columns:92px minmax(0,1fr) !important; }
-        .vehicle-thumb-img { width:92px !important; min-height:88px !important; max-height:100px !important; }
-        .vehicle-card-body { grid-template-columns:1fr !important; grid-template-areas:'badges' 'title' 'meta' 'actions' !important; gap:3px !important; }
-        .vehicle-card .vehicle-actions { justify-content:flex-start !important; max-width:none !important; margin-top:4px !important; }
-        .photo-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
-        .photo-item { max-width:none !important; }
+      /* V33: respaldo responsive para dimensiones forzadas inline */
+      @media (max-width:650px) {
+        .vehicle-card { grid-template-columns:96px minmax(0,1fr) !important; max-height:none !important; }
+        .vehicle-card > div:first-child { width:96px !important; min-width:96px !important; max-width:96px !important; height:96px !important; min-height:96px !important; max-height:96px !important; }
+        .vehicle-card-body { grid-template-columns:1fr !important; grid-template-areas:'badges' 'title' 'meta' 'actions' !important; }
       }
     </style>
   </head>
@@ -280,13 +259,13 @@ const pageTitle = 'Administración · Lopez Automotores';
         els.vehicleList.innerHTML=vehicles.map(v=>{
           const img=Array.isArray(v.fotos)&&v.fotos[0]?v.fotos[0]:'/images/placeholder-car.svg';
           const safeImg = String(img).replace(/\\/g,'/').replace(/'/g,"%27");
-          return `<article class="card vehicle-card">
-            <img class="vehicle-thumb-img" src="${escapeHtml(img)}" alt="${escapeHtml(`${v.marca||''} ${v.modelo||''}`)}" loading="lazy" />
-            <div class="vehicle-card-body">
-              <div class="badges">${v.vendido?'<span class="badge red">Vendido</span>':''}${v.publicado?'<span class="badge">Publicado</span>':'<span class="badge">Oculto</span>'}${v.destacado?'<span class="badge">Destacado</span>':''}</div>
-              <h3>${escapeHtml(v.marca||'')} ${escapeHtml(v.modelo||'')}</h3>
-              <div class="meta">${escapeHtml(v.version||'')} · ${v.anio||'—'} · ${km(v.kilometraje)} · ${peso(v.precio)}</div>
-              <div class="vehicle-actions">
+          return `<article class="card vehicle-card" style="display:grid!important;grid-template-columns:140px minmax(0,1fr)!important;min-height:104px!important;max-height:104px!important;padding:0!important;overflow:hidden!important;border-radius:14px!important;">
+            <div role="img" aria-label="${escapeHtml(`${v.marca||''} ${v.modelo||''}`)}" style="width:140px!important;height:104px!important;min-width:140px!important;min-height:104px!important;max-width:140px!important;max-height:104px!important;background-image:url('${safeImg}');background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important;border-right:1px solid #292c31!important;"></div>
+            <div class="vehicle-card-body" style="padding:10px 14px!important;min-width:0!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;grid-template-areas:'badges actions' 'title actions' 'meta actions'!important;column-gap:14px!important;align-content:center!important;">
+              <div class="badges" style="grid-area:badges!important;margin:0 0 3px!important;display:flex!important;gap:6px!important;">${v.vendido?'<span class="badge red">Vendido</span>':''}${v.publicado?'<span class="badge">Publicado</span>':'<span class="badge">Oculto</span>'}${v.destacado?'<span class="badge">Destacado</span>':''}</div>
+              <h3 style="grid-area:title!important;margin:2px 0 4px!important;font-size:16px!important;line-height:1.2!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;">${escapeHtml(v.marca||'')} ${escapeHtml(v.modelo||'')}</h3>
+              <div class="meta" style="grid-area:meta!important;margin:0!important;font-size:12px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;">${escapeHtml(v.version||'')} · ${v.anio||'—'} · ${km(v.kilometraje)} · ${peso(v.precio)}</div>
+              <div class="vehicle-actions" style="grid-area:actions!important;display:flex!important;gap:6px!important;align-items:center!important;justify-content:flex-end!important;flex-wrap:wrap!important;max-width:280px!important;">
                 <button class="btn btn-small" data-edit="${v.id}">Editar</button>
                 <button class="btn btn-small" data-sold="${v.id}">${v.vendido?'Marcar disponible':'Marcar vendido'}</button>
                 <button class="btn btn-small btn-danger" data-delete="${v.id}">Eliminar</button>
@@ -321,18 +300,19 @@ const pageTitle = 'Administración · Lopez Automotores';
         arr.splice(to, 0, item);
       }
       function renderPhotos() {
+        els.photoGrid.style.cssText='display:grid!important;grid-template-columns:repeat(auto-fill,140px)!important;gap:10px!important;align-items:start!important;justify-content:start!important;margin-top:14px!important;';
         els.photoGrid.innerHTML = photoItems.map((item,i)=>{
           const src = item.kind==='old' ? item.value : URL.createObjectURL(item.value);
-          return `<div class="photo-item" data-photo-index="${i}">
-            <div class="photo-thumb">
-              <img src="${escapeHtml(src)}" alt="Foto ${i+1}" />
-              ${i===0?'<span class="photo-primary">PORTADA</span>':''}
+          return `<div data-photo-index="${i}" style="width:140px!important;max-width:140px!important;min-width:140px!important;overflow:hidden!important;border:1px solid #2d3035!important;border-radius:10px!important;background:#0b0d0f!important;">
+            <div style="position:relative!important;width:140px!important;height:92px!important;overflow:hidden!important;background:#050606!important;">
+              <img src="${escapeHtml(src)}" alt="Foto ${i+1}" style="display:block!important;width:140px!important;height:92px!important;min-width:140px!important;min-height:92px!important;max-width:140px!important;max-height:92px!important;object-fit:cover!important;" />
+              ${i===0?'<span class="photo-primary" style="position:absolute!important;left:6px!important;top:6px!important;">PORTADA</span>':''}
             </div>
-            <div class="photo-tools">
-              <button type="button" data-move-left="${i}" ${i===0?'disabled':''}>←</button>
-              <button type="button" data-move-right="${i}" ${i===photoItems.length-1?'disabled':''}>→</button>
-              ${i===0?'':`<button type="button" class="make-primary" data-primary="${i}">Hacer principal</button>`}
-              <button type="button" class="remove-photo" data-remove="${i}">Quitar</button>
+            <div style="display:grid!important;grid-template-columns:30px 30px minmax(0,1fr)!important;gap:4px!important;padding:6px!important;">
+              <button type="button" data-move-left="${i}" ${i===0?'disabled':''} style="height:28px!important;padding:0!important;">←</button>
+              <button type="button" data-move-right="${i}" ${i===photoItems.length-1?'disabled':''} style="height:28px!important;padding:0!important;">→</button>
+              ${i===0?'':`<button type="button" data-primary="${i}" style="height:28px!important;padding:0 5px!important;font-size:10px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;">Principal</button>`}
+              <button type="button" data-remove="${i}" style="grid-column:1/-1!important;height:28px!important;padding:0 5px!important;font-size:10px!important;color:#ff7c8a!important;background:#250e12!important;border:1px solid #5d2029!important;border-radius:7px!important;">Quitar</button>
             </div>
           </div>`;
         }).join('');

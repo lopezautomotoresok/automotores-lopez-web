@@ -1,18 +1,5 @@
 ---
-import { autos } from '../data/autos.js';
 import '../styles/global.css';
-
-const formatPrice = (value) => value > 0 ? `$${value.toLocaleString('es-AR')}` : 'Consultar precio';
-const formatKm = (value) => `${value.toLocaleString('es-AR')} km`;
-const shortTransmission = (value = '') => {
-  const v = String(value).toLowerCase();
-  if (v.includes('autom')) return 'Automática';
-  if (v.includes('manual')) return 'Manual';
-  return value;
-};
-const marcas = [...new Set(autos.map((a) => a.marca))];
-const tipos = [...new Set(autos.map((a) => a.tipo))];
-const anios = [...new Set(autos.map((a) => a.anio))].sort((a,b) => b-a);
 ---
 <!doctype html>
 <html lang="es">
@@ -145,6 +132,8 @@ const anios = [...new Set(autos.map((a) => a.anio))].sort((a,b) => b-a);
         .site-footer-brand img{width:138px}
         .site-footer-links{justify-content:flex-start;gap:14px 18px}
       }
+      .catalog-loading{grid-column:1/-1;padding:48px 20px;text-align:center;color:#9da0a6;font-size:14px}
+      .catalog-error{grid-column:1/-1;padding:32px 20px;text-align:center;color:#ff7180;border:1px solid rgba(255,70,90,.22);border-radius:16px;background:rgba(110,15,28,.08)}
     </style>
   </head>
 
@@ -232,7 +221,7 @@ const anios = [...new Set(autos.map((a) => a.anio))].sort((a,b) => b-a);
               <div class="eyebrow">STOCK DISPONIBLE</div>
               <h2>Elegí el que va con vos.</h2>
             </div>
-            <p><strong id="visibleCount">{autos.length}</strong> {autos.length === 1 ? 'unidad' : 'unidades'}</p>
+            <p><strong id="visibleCount">—</strong> <span id="unitLabel">unidades</span></p>
           </div>
 
           <div class="filter-panel">
@@ -252,75 +241,24 @@ const anios = [...new Set(autos.map((a) => a.anio))].sort((a,b) => b-a);
 
               <label class="field">
                 <span>Marca</span>
-                <select id="brand" class="select">
-                  <option value="">Todas las marcas</option>
-                  {marcas.map((marca) => <option value={marca}>{marca}</option>)}
-                </select>
+                <select id="brand" class="select"><option value="">Todas las marcas</option></select>
               </label>
 
               <label class="field">
                 <span>Año</span>
-                <select id="year" class="select">
-                  <option value="">Todos los años</option>
-                  {anios.map((anio) => <option value={anio}>{anio}</option>)}
-                </select>
+                <select id="year" class="select"><option value="">Todos los años</option></select>
               </label>
 
               <label class="field">
                 <span>Tipo</span>
-                <select id="type" class="select">
-                  <option value="">Todos los tipos</option>
-                  {tipos.map((tipo) => <option value={tipo}>{tipo}</option>)}
-                </select>
+                <select id="type" class="select"><option value="">Todos los tipos</option></select>
               </label>
 
             </div>
           </div>
 
-          <div id="grid" class="vehicle-grid">
-            {autos.map((auto) => (
-              <article
-                class="vehicle-card"
-                data-marca={auto.marca}
-                data-tipo={auto.tipo}
-                data-name={`${auto.marca} ${auto.modelo}`.toLowerCase()}
-                data-year={auto.anio}
-                data-km={auto.km}
-                data-price={auto.precio || 999999999}
-              >
-                <a class="vehicle-image-wrap" href={`/vehiculos/${auto.id}`} aria-label={`Ver ${auto.marca} ${auto.modelo}`}>
-                  <img class="vehicle-image" src={auto.imagen} alt={`${auto.marca} ${auto.modelo}`} loading="lazy" />
-                  <div class="vehicle-image-overlay"></div>
-                  <span class="vehicle-year-chip">{auto.anio}</span>
-                  {auto.estado && auto.estado !== 'Disponible' && <span class={`vehicle-status vehicle-status-${String(auto.estado).toLowerCase()}`}>{auto.estado}</span>}
-                </a>
-
-                <div class="vehicle-body">
-                  <div class="vehicle-title-block">
-                    <div class="vehicle-brand">{auto.marca}</div>
-                    <h3>{auto.modelo}</h3>
-                  </div>
-
-                  <div class="vehicle-specs-clean" aria-label="Datos principales">
-                    <span>{formatKm(auto.km)}</span>
-                    <span>{auto.tipo}</span>
-                    <span>{auto.combustible}</span>
-                    <span>{shortTransmission(auto.transmision)}</span>
-                  </div>
-
-                  <div class="vehicle-footer vehicle-footer-premium">
-                    <div class="vehicle-price-block">
-                      <small>Precio</small>
-                      <div class="price">{formatPrice(auto.precio)}</div>
-                    </div>
-                    <a class="vehicle-cta" href={`/vehiculos/${auto.id}`}>
-                      <span>Ver vehículo</span>
-                      <span aria-hidden="true">→</span>
-                    </a>
-                  </div>
-                </div>
-              </article>
-            ))}
+          <div id="grid" class="vehicle-grid" aria-live="polite">
+            <div class="catalog-loading">Cargando vehículos…</div>
           </div>
 
           <div id="emptyState" class="empty-state" hidden>
@@ -414,6 +352,8 @@ const anios = [...new Set(autos.map((a) => a.anio))].sort((a,b) => b-a);
     </footer>
 
     <script>
+      import { supabase } from '../lib/supabase.js';
+
       const search = document.querySelector('#search');
       const brand = document.querySelector('#brand');
       const year = document.querySelector('#year');
@@ -421,79 +361,87 @@ const anios = [...new Set(autos.map((a) => a.anio))].sort((a,b) => b-a);
       const clearFilters = document.querySelector('#clearFilters');
       const grid = document.querySelector('#grid');
       const visibleCount = document.querySelector('#visibleCount');
+      const unitLabel = document.querySelector('#unitLabel');
       const emptyState = document.querySelector('#emptyState');
+      let vehicles = [];
+
+      const esc = (value='') => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+      const price = (value) => Number(value) > 0 ? new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}).format(Number(value)) : 'Consultar precio';
+      const km = (value) => value === null || value === undefined ? '—' : `${new Intl.NumberFormat('es-AR').format(Number(value))} km`;
+      const shortTransmission = (value='') => { const v=String(value).toLowerCase(); if(v.includes('autom')) return 'Automática'; if(v.includes('manual')) return 'Manual'; return value || '—'; };
+      const title = (v) => [v.modelo, v.version].filter(Boolean).join(' ');
+
+      function fillSelect(select, values, firstLabel) {
+        select.innerHTML = `<option value="">${firstLabel}</option>` + values.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+      }
+
+      function renderCards() {
+        if (!vehicles.length) { grid.innerHTML=''; updateCatalog(); return; }
+        grid.innerHTML = vehicles.map(v => {
+          const image = Array.isArray(v.fotos) && v.fotos[0] ? v.fotos[0] : '/images/placeholder-car.svg';
+          const name = `${v.marca || ''} ${title(v)}`.trim();
+          const href = `/vehiculos/${encodeURIComponent(v.slug)}`;
+          return `<article class="vehicle-card" data-marca="${esc(v.marca||'')}" data-tipo="${esc(v.tipo||'')}" data-name="${esc(name.toLowerCase())}" data-year="${esc(v.anio||'')}">
+            <a class="vehicle-image-wrap" href="${href}" aria-label="Ver ${esc(name)}">
+              <img class="vehicle-image" src="${esc(image)}" alt="${esc(name)}" loading="lazy" />
+              <div class="vehicle-image-overlay"></div>
+              ${v.anio ? `<span class="vehicle-year-chip">${esc(v.anio)}</span>` : ''}
+            </a>
+            <div class="vehicle-body">
+              <div class="vehicle-title-block"><div class="vehicle-brand">${esc(v.marca||'')}</div><h3>${esc(title(v))}</h3></div>
+              <div class="vehicle-specs-clean" aria-label="Datos principales">
+                <span>${esc(km(v.kilometraje))}</span><span>${esc(v.tipo||'—')}</span><span>${esc(v.combustible||'—')}</span><span>${esc(shortTransmission(v.transmision))}</span>
+              </div>
+              <div class="vehicle-footer vehicle-footer-premium">
+                <div class="vehicle-price-block"><small>Precio</small><div class="price">${esc(price(v.precio))}</div></div>
+                <a class="vehicle-cta" href="${href}"><span>Ver vehículo</span><span aria-hidden="true">→</span></a>
+              </div>
+            </div>
+          </article>`;
+        }).join('');
+        updateCatalog();
+      }
 
       function updateCatalog() {
         const cards = [...grid.querySelectorAll('.vehicle-card')];
         const term = search.value.trim().toLowerCase();
-        const brandValue = brand.value;
-        const yearValue = year.value;
-        const typeValue = type.value;
+        const brandValue = brand.value; const yearValue = year.value; const typeValue = type.value;
         let count = 0;
-
-        cards.forEach((card) => {
-          const visible = (!term || card.dataset.name.includes(term)) &&
-            (!brandValue || card.dataset.marca === brandValue) &&
-            (!yearValue || card.dataset.year === yearValue) &&
-            (!typeValue || card.dataset.tipo === typeValue);
-          card.hidden = !visible;
-          if (visible) count++;
+        cards.forEach(card => {
+          const visible = (!term || card.dataset.name.includes(term)) && (!brandValue || card.dataset.marca === brandValue) && (!yearValue || card.dataset.year === yearValue) && (!typeValue || card.dataset.tipo === typeValue);
+          card.hidden = !visible; if (visible) count++;
         });
-
-
         visibleCount.textContent = String(count);
-        emptyState.hidden = count !== 0;
+        unitLabel.textContent = count === 1 ? 'unidad' : 'unidades';
+        emptyState.hidden = count !== 0 || vehicles.length === 0;
       }
 
-      [search, brand, year, type].forEach((el) => el.addEventListener('input', updateCatalog));
-      [brand, year, type].forEach((el) => el.addEventListener('change', updateCatalog));
+      async function loadCatalog() {
+        const { data, error } = await supabase.from('vehiculos').select('*').eq('publicado', true).eq('vendido', false).order('destacado',{ascending:false}).order('created_at',{ascending:false});
+        if (error) { grid.innerHTML=`<div class="catalog-error">No pudimos cargar el stock. Probá nuevamente en unos instantes.</div>`; visibleCount.textContent='0'; unitLabel.textContent='unidades'; return; }
+        vehicles = data || [];
+        const brands=[...new Set(vehicles.map(v=>v.marca).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+        const years=[...new Set(vehicles.map(v=>v.anio).filter(Boolean))].sort((a,b)=>b-a);
+        const types=[...new Set(vehicles.map(v=>v.tipo).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+        fillSelect(brand,brands,'Todas las marcas'); fillSelect(year,years,'Todos los años'); fillSelect(type,types,'Todos los tipos');
+        renderCards();
+      }
 
-      clearFilters.addEventListener('click', () => {
-        search.value = '';
-        brand.value = '';
-        year.value = '';
-        type.value = '';
-        updateCatalog();
-        search.focus();
-      });
+      [search, brand, year, type].forEach(el => el.addEventListener('input', updateCatalog));
+      [brand, year, type].forEach(el => el.addEventListener('change', updateCatalog));
+      clearFilters.addEventListener('click', () => { search.value=''; brand.value=''; year.value=''; type.value=''; updateCatalog(); search.focus(); });
 
       const quickTrack = document.querySelector('.quick-actions');
       const quickCards = quickTrack ? [...quickTrack.querySelectorAll('.quick-action')] : [];
-      let quickIndex = 0;
-      let quickTimer;
-
-      function isQuickMobile() {
-        return window.matchMedia('(max-width: 700px)').matches;
-      }
-
-      function goToQuick(index) {
-        if (!quickTrack || !quickCards.length || !isQuickMobile()) return;
-        quickIndex = (index + quickCards.length) % quickCards.length;
-        quickTrack.scrollTo({ left: quickCards[quickIndex].offsetLeft - 18, behavior: 'smooth' });
-      }
-
-      function startQuickAutoplay() {
-        clearInterval(quickTimer);
-        if (!isQuickMobile()) return;
-        quickTimer = setInterval(() => goToQuick(quickIndex + 1), 4500);
-      }
-
-      quickTrack?.addEventListener('touchstart', () => clearInterval(quickTimer), { passive: true });
-      quickTrack?.addEventListener('touchend', startQuickAutoplay, { passive: true });
-      quickTrack?.addEventListener('scroll', () => {
-        if (!isQuickMobile() || !quickCards.length) return;
-        const x = quickTrack.scrollLeft + quickTrack.clientWidth / 2;
-        let nearest = 0;
-        let distance = Infinity;
-        quickCards.forEach((card, i) => {
-          const center = card.offsetLeft + card.offsetWidth / 2;
-          const d = Math.abs(center - x);
-          if (d < distance) { distance = d; nearest = i; }
-        });
-        quickIndex = nearest;
-      }, { passive: true });
-      window.addEventListener('resize', startQuickAutoplay);
-      startQuickAutoplay();
+      let quickIndex = 0; let quickTimer;
+      const isQuickMobile = () => window.matchMedia('(max-width: 700px)').matches;
+      function goToQuick(index) { if (!quickTrack || !quickCards.length || !isQuickMobile()) return; quickIndex=(index+quickCards.length)%quickCards.length; quickTrack.scrollTo({left:quickCards[quickIndex].offsetLeft-18,behavior:'smooth'}); }
+      function startQuickAutoplay() { clearInterval(quickTimer); if (!isQuickMobile()) return; quickTimer=setInterval(()=>goToQuick(quickIndex+1),4500); }
+      quickTrack?.addEventListener('touchstart',()=>clearInterval(quickTimer),{passive:true});
+      quickTrack?.addEventListener('touchend',startQuickAutoplay,{passive:true});
+      quickTrack?.addEventListener('scroll',()=>{ if(!isQuickMobile()||!quickCards.length)return; const x=quickTrack.scrollLeft+quickTrack.clientWidth/2; let nearest=0,distance=Infinity; quickCards.forEach((card,i)=>{const center=card.offsetLeft+card.offsetWidth/2,d=Math.abs(center-x); if(d<distance){distance=d;nearest=i;}}); quickIndex=nearest; },{passive:true});
+      window.addEventListener('resize',startQuickAutoplay); startQuickAutoplay();
+      loadCatalog();
     </script>
   </body>
 </html>

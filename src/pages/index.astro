@@ -380,7 +380,7 @@ import '../styles/global.css';
         grid.innerHTML = vehicles.map(v => {
           const image = Array.isArray(v.fotos) && v.fotos[0] ? v.fotos[0] : '/images/placeholder-car.svg';
           const name = `${v.marca || ''} ${title(v)}`.trim();
-          const href = `/vehiculos/${encodeURIComponent(v.slug)}`;
+          const href = `/vehiculo?id=${encodeURIComponent(v.id)}`;
           return `<article class="vehicle-card" data-marca="${esc(v.marca||'')}" data-tipo="${esc(v.tipo||'')}" data-name="${esc(name.toLowerCase())}" data-year="${esc(v.anio||'')}">
             <a class="vehicle-image-wrap" href="${href}" aria-label="Ver ${esc(name)}">
               <img class="vehicle-image" src="${esc(image)}" alt="${esc(name)}" loading="lazy" />

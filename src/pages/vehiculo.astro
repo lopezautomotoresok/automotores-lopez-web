@@ -94,7 +94,7 @@ import '../styles/global.css';
       const formatKm = (value) => value===null||value===undefined ? '—' : `${new Intl.NumberFormat('es-AR').format(Number(value))} km`;
       const shortTransmission = (value='') => { const v=String(value).toLowerCase(); if(v.includes('autom')) return 'Automática'; if(v.includes('manual')) return 'Manual'; return value||'—'; };
       const fullTitle = (v) => [v.modelo,v.version].filter(Boolean).join(' ');
-      const slug = new URLSearchParams(location.search).get('id') || decodeURIComponent(location.pathname.split('/').filter(Boolean).pop() || '');
+      const vehicleId = new URLSearchParams(location.search).get('id');
       let photos=[]; let current=0;
 
       function showPhoto(index){ if(!photos.length)return; current=(index+photos.length)%photos.length; $('main-image').src=photos[current]; $('galleryCount').textContent=`${current+1} / ${photos.length}`; document.querySelectorAll('.gallery-thumb').forEach((t,i)=>t.classList.toggle('is-active',i===current)); }
@@ -103,7 +103,7 @@ import '../styles/global.css';
       function similarScore(a, current){ if(Number(current.precio)>0&&Number(a.precio)>0)return Math.abs(Number(a.precio)-Number(current.precio)); return (a.tipo===current.tipo?0:100000000)+(Math.abs((a.anio||0)-(current.anio||0))*100000); }
 
       async function loadVehicle(){
-        const {data:auto,error}=await supabase.from('vehiculos').select('*').eq('slug',slug).eq('publicado',true).eq('vendido',false).maybeSingle();
+        const {data:auto,error}=await supabase.from('vehiculos').select('*').eq('id',vehicleId).eq('publicado',true).eq('vendido',false).maybeSingle();
         $('vehicleLoading').hidden=true;
         if(error||!auto){$('vehicleError').hidden=false; return;}
         document.title=`${auto.marca} ${fullTitle(auto)} | Lopez Automotores`;
@@ -124,7 +124,7 @@ import '../styles/global.css';
 
         const {data:others}=await supabase.from('vehiculos').select('*').eq('publicado',true).eq('vendido',false).neq('id',auto.id).limit(24);
         const similar=(others||[]).sort((a,b)=>similarScore(a,auto)-similarScore(b,auto)).slice(0,6);
-        if(similar.length){ $('similarCarousel').innerHTML=similar.map(v=>{const img=Array.isArray(v.fotos)&&v.fotos[0]?v.fotos[0]:'/images/placeholder-car.svg'; return `<a class="similar-card" href="/vehiculos/${encodeURIComponent(v.slug)}"><div class="similar-image-wrap"><img src="${esc(img)}" alt="${esc(`${v.marca} ${fullTitle(v)}`)}" />${v.anio?`<span>${esc(v.anio)}</span>`:''}</div><div class="similar-card-body"><small>${esc(v.marca||'')}</small><h3>${esc(fullTitle(v))}</h3><div class="similar-meta"><span>${esc(formatKm(v.kilometraje))}</span><span>${esc(v.tipo||'')}</span></div><strong>${esc(formatPrice(v.precio))}</strong></div></a>`;}).join(''); $('similarSection').hidden=false; }
+        if(similar.length){ $('similarCarousel').innerHTML=similar.map(v=>{const img=Array.isArray(v.fotos)&&v.fotos[0]?v.fotos[0]:'/images/placeholder-car.svg'; return `<a class="similar-card" href="/vehiculo?id=${encodeURIComponent(v.id)}"><div class="similar-image-wrap"><img src="${esc(img)}" alt="${esc(`${v.marca} ${fullTitle(v)}`)}" />${v.anio?`<span>${esc(v.anio)}</span>`:''}</div><div class="similar-card-body"><small>${esc(v.marca||'')}</small><h3>${esc(fullTitle(v))}</h3><div class="similar-meta"><span>${esc(formatKm(v.kilometraje))}</span><span>${esc(v.tipo||'')}</span></div><strong>${esc(formatPrice(v.precio))}</strong></div></a>`;}).join(''); $('similarSection').hidden=false; }
       }
       loadVehicle();
     </script>

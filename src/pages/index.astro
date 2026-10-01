@@ -285,30 +285,32 @@ const anios = [...new Set(autos.map((a) => a.anio))].sort((a,b) => b-a);
                 <a class="vehicle-image-wrap" href={`/vehiculos/${auto.id}`} aria-label={`Ver ${auto.marca} ${auto.modelo}`}>
                   <img class="vehicle-image" src={auto.imagen} alt={`${auto.marca} ${auto.modelo}`} loading="lazy" />
                   <div class="vehicle-image-overlay"></div>
-                  <div class="view-hint">Ver vehículo <span>→</span></div>
+                  <span class="vehicle-year-chip">{auto.anio}</span>
+                  {auto.estado && auto.estado !== 'Disponible' && <span class={`vehicle-status vehicle-status-${String(auto.estado).toLowerCase()}`}>{auto.estado}</span>}
                 </a>
 
                 <div class="vehicle-body">
-                  <div class="vehicle-heading">
-                    <div>
-                      <div class="vehicle-brand">{auto.marca}</div>
-                      <h3>{auto.modelo}</h3>
-                    </div>
-                    <div class="vehicle-year">{auto.anio}</div>
+                  <div class="vehicle-title-block">
+                    <div class="vehicle-brand">{auto.marca}</div>
+                    <h3>{auto.modelo}</h3>
                   </div>
 
-                  <div class="vehicle-meta">
+                  <div class="vehicle-specs" aria-label="Datos principales">
                     <span>{formatKm(auto.km)}</span>
+                    <span>{auto.tipo}</span>
                     <span>{auto.combustible}</span>
                     <span>{auto.transmision}</span>
                   </div>
 
-                  <div class="vehicle-footer">
-                    <div>
+                  <div class="vehicle-footer vehicle-footer-premium">
+                    <div class="vehicle-price-block">
                       <small>Precio</small>
                       <div class="price">{formatPrice(auto.precio)}</div>
                     </div>
-                    <a class="arrow-button" href={`/vehiculos/${auto.id}`} aria-label="Ver ficha del vehículo">→</a>
+                    <a class="vehicle-cta" href={`/vehiculos/${auto.id}`}>
+                      <span>Ver vehículo</span>
+                      <span aria-hidden="true">→</span>
+                    </a>
                   </div>
                 </div>
               </article>

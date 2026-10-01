@@ -175,7 +175,8 @@ const pageTitle = 'Administración · Lopez Automotores';
 
                 <div class="span-4 checks">
                   <label><input id="publicado" type="checkbox" checked /> Publicado</label>
-                  <label><input id="destacado" type="checkbox" /> Destacado</label>
+                  <label><input id="destacado" type="checkbox" /> Nuevo ingreso</label>
+                  <label><input id="reservado" type="checkbox" /> Reservado</label>
                   <label><input id="vendido" type="checkbox" /> Vendido</label>
                 </div>
 
@@ -262,7 +263,7 @@ const pageTitle = 'Administración · Lopez Automotores';
           return `<article class="card vehicle-card" style="display:grid!important;grid-template-columns:140px minmax(0,1fr)!important;min-height:104px!important;max-height:104px!important;padding:0!important;overflow:hidden!important;border-radius:14px!important;">
             <div role="img" aria-label="${escapeHtml(`${v.marca||''} ${v.modelo||''}`)}" style="width:140px!important;height:104px!important;min-width:140px!important;min-height:104px!important;max-width:140px!important;max-height:104px!important;background-image:url('${safeImg}');background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important;border-right:1px solid #292c31!important;"></div>
             <div class="vehicle-card-body" style="padding:10px 14px!important;min-width:0!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;grid-template-areas:'badges actions' 'title actions' 'meta actions'!important;column-gap:14px!important;align-content:center!important;">
-              <div class="badges" style="grid-area:badges!important;margin:0 0 3px!important;display:flex!important;gap:6px!important;">${v.vendido?'<span class="badge red">Vendido</span>':''}${v.publicado?'<span class="badge">Publicado</span>':'<span class="badge">Oculto</span>'}${v.destacado?'<span class="badge">Destacado</span>':''}</div>
+              <div class="badges" style="grid-area:badges!important;margin:0 0 3px!important;display:flex!important;gap:6px!important;">${v.vendido?'<span class="badge red">Vendido</span>':''}${v.publicado?'<span class="badge">Publicado</span>':'<span class="badge">Oculto</span>'}${v.destacado?'<span class="badge">Nuevo ingreso</span>':''}${v.reservado?'<span class="badge amber">Reservado</span>':''}</div>
               <h3 style="grid-area:title!important;margin:2px 0 4px!important;font-size:16px!important;line-height:1.2!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;">${escapeHtml(v.marca||'')} ${escapeHtml(v.modelo||'')}</h3>
               <div class="meta" style="grid-area:meta!important;margin:0!important;font-size:12px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;">${escapeHtml(v.version||'')} · ${v.anio||'—'} · ${km(v.kilometraje)} · ${peso(v.precio)}</div>
               <div class="vehicle-actions" style="grid-area:actions!important;display:flex!important;gap:6px!important;align-items:center!important;justify-content:flex-end!important;flex-wrap:wrap!important;max-width:280px!important;">
@@ -286,7 +287,7 @@ const pageTitle = 'Administración · Lopez Automotores';
         const v=vehicles.find(x=>x.id===id); if(!v) return;
         resetForm(); els.formTitle.textContent=`Editar ${v.marca||''} ${v.modelo||''}`; $('recordId').value=v.id; $('slug').value=v.slug||'';
         ['marca','modelo','version','anio','kilometraje','precio','color','tipo','combustible','transmision','traccion','carroceria','plazas','descripcion'].forEach(k=>{ if($(k)) $(k).value=v[k]??''; });
-        $('publicado').checked=!!v.publicado; $('destacado').checked=!!v.destacado; $('vendido').checked=!!v.vendido;
+        $('publicado').checked=!!v.publicado; $('destacado').checked=!!v.destacado; $('reservado').checked=!!v.reservado; $('vendido').checked=!!v.vendido;
         $('motor').value=arrayToLines(v.motor); $('dimensiones').value=arrayToLines(v.dimensiones); $('confort').value=arrayToLines(v.confort); $('seguridad').value=arrayToLines(v.seguridad);
         photoItems=(Array.isArray(v.fotos)?v.fotos:[]).map(url=>({kind:'old',value:url})); renderPhotos(); els.formSection.classList.remove('hidden'); els.formSection.scrollIntoView({behavior:'smooth',block:'start'});
       }
@@ -346,7 +347,7 @@ const pageTitle = 'Administración · Lopez Automotores';
         save.disabled=true; els.vehicleForm.classList.add('loading'); setStatus(els.formStatus,'Guardando…');
         try {
           const fotos=await uploadPhotosInOrder(autoSlug);
-          const payload={ slug:autoSlug, marca:$('marca').value.trim(), modelo:$('modelo').value.trim(), version:$('version').value.trim()||null, anio:$('anio').value?Number($('anio').value):null, kilometraje:$('kilometraje').value?Number($('kilometraje').value):null, precio:$('precio').value?Number($('precio').value):null, moneda:'ARS', color:$('color').value.trim()||null, tipo:$('tipo').value||null, combustible:$('combustible').value||null, transmision:$('transmision').value.trim()||null, traccion:$('traccion').value.trim()||null, carroceria:$('carroceria').value.trim()||null, plazas:$('plazas').value?Number($('plazas').value):null, descripcion:$('descripcion').value.trim()||null, motor:linesToArray($('motor').value), dimensiones:linesToArray($('dimensiones').value), confort:linesToArray($('confort').value), seguridad:linesToArray($('seguridad').value), fotos, destacado:$('destacado').checked, vendido:$('vendido').checked, publicado:$('publicado').checked, updated_at:new Date().toISOString() };
+          const payload={ slug:autoSlug, marca:$('marca').value.trim(), modelo:$('modelo').value.trim(), version:$('version').value.trim()||null, anio:$('anio').value?Number($('anio').value):null, kilometraje:$('kilometraje').value?Number($('kilometraje').value):null, precio:$('precio').value?Number($('precio').value):null, moneda:'ARS', color:$('color').value.trim()||null, tipo:$('tipo').value||null, combustible:$('combustible').value||null, transmision:$('transmision').value.trim()||null, traccion:$('traccion').value.trim()||null, carroceria:$('carroceria').value.trim()||null, plazas:$('plazas').value?Number($('plazas').value):null, descripcion:$('descripcion').value.trim()||null, motor:linesToArray($('motor').value), dimensiones:linesToArray($('dimensiones').value), confort:linesToArray($('confort').value), seguridad:linesToArray($('seguridad').value), fotos, destacado:$('destacado').checked, reservado:$('reservado').checked, vendido:$('vendido').checked, publicado:$('publicado').checked, updated_at:new Date().toISOString() };
           let result;
           if(editingId) result=await supabase.from('vehiculos').update(payload).eq('id',editingId);
           else result=await supabase.from('vehiculos').insert(payload);

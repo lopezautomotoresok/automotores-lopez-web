@@ -43,13 +43,28 @@ const pageTitle = 'Administración · Lopez Automotores';
       .hidden { display:none !important; }
       .dash-head { display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:26px; }
       .dash-head p { margin-bottom:0; }
-      .vehicle-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
-      .vehicle-card { overflow:hidden; padding:0; }
-      .vehicle-card img { width:100%; aspect-ratio:16/10; object-fit:cover; background:#090a0b; display:block; }
-      .vehicle-card-body { padding:18px; }
-      .vehicle-card h3 { margin:0 0 8px; font-size:19px; }
-      .meta { color:var(--muted); font-size:14px; margin-bottom:16px; }
-      .badges { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:16px; }
+      .vehicle-list { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+      .vehicle-card { overflow:hidden; padding:0; border-radius:16px; }
+      .vehicle-card img { width:100%; aspect-ratio:16/9; object-fit:cover; background:#090a0b; display:block; }
+      .vehicle-card-body { padding:14px; }
+      .vehicle-card h3 { margin:0 0 6px; font-size:17px; line-height:1.2; }
+      .meta { color:var(--muted); font-size:12px; line-height:1.45; margin-bottom:12px; }
+      .badges { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:11px; }
+      .vehicle-card .badge { padding:4px 7px; font-size:10px; }
+      .vehicle-card .vehicle-actions { gap:6px; }
+      .vehicle-card .vehicle-actions .btn { flex:1 1 auto; min-height:32px; padding:0 9px; font-size:11px; }
+      .photo-help { color:var(--muted); font-size:13px; margin:10px 0 0; }
+      .photo-item { display:flex; flex-direction:column; aspect-ratio:auto; overflow:hidden; }
+      .photo-thumb { position:relative; aspect-ratio:1/1; overflow:hidden; background:#050606; }
+      .photo-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+      .photo-primary { position:absolute; left:7px; top:7px; padding:4px 7px; border-radius:999px; background:var(--red); color:white; font-size:10px; font-weight:900; letter-spacing:.04em; }
+      .photo-tools { display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:7px; background:#0b0d0f; }
+      .photo-tools button { position:static; width:auto; height:30px; border-radius:8px; border:1px solid #30343a; background:#15181b; color:#f5f5f5; font-size:12px; font-weight:800; }
+      .photo-tools button:hover { border-color:#555b65; }
+      .photo-tools .make-primary { grid-column:1/-1; color:#ff5265; }
+      .photo-tools .remove-photo { grid-column:1/-1; color:#ff7c8a; background:#250e12; border-color:#5d2029; }
+      .photo-order-note { margin-top:8px; font-size:12px; color:#8d939b; }
+
       .badge { border:1px solid #30343a; background:#0d0f11; border-radius:999px; padding:5px 9px; font-size:12px; color:#c8ccd1; }
       .badge.red { border-color:#69212a; color:#ff6171; background:#251014; }
       .vehicle-actions { display:flex; flex-wrap:wrap; gap:8px; }
@@ -66,12 +81,11 @@ const pageTitle = 'Administración · Lopez Automotores';
       .photo-zone { border:1px dashed #464b53; background:#0c0e10; border-radius:15px; padding:20px; }
       .photo-zone input { background:transparent; border:0; padding:0; min-height:auto; }
       .photo-grid { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:10px; margin-top:15px; }
-      .photo-item { position:relative; border-radius:10px; overflow:hidden; border:1px solid var(--line); background:#050606; aspect-ratio:1/1; }
-      .photo-item img { width:100%; height:100%; object-fit:cover; display:block; }
-      .photo-item button { position:absolute; top:5px; right:5px; width:28px; height:28px; border-radius:50%; border:0; background:rgba(0,0,0,.8); color:white; font-size:17px; }
       .form-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:22px; border-top:1px solid var(--line); padding-top:20px; }
       .loading { opacity:.55; pointer-events:none; }
-      @media (max-width:1050px) { .vehicle-list { grid-template-columns:repeat(2,minmax(0,1fr)); } .form-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .span-4 { grid-column:1/-1; } .photo-grid { grid-template-columns:repeat(4,minmax(0,1fr)); } }
+      @media (max-width:1180px) { .vehicle-list { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+      @media (max-width:900px) { .vehicle-list { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+      @media (max-width:1050px) { .form-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .span-4 { grid-column:1/-1; } .photo-grid { grid-template-columns:repeat(4,minmax(0,1fr)); } }
       @media (max-width:650px) { .topbar { min-height:64px; padding:10px 16px; } .brand img { width:145px; } .brand small { display:none; } main { width:min(100% - 24px,1440px); padding-top:24px; } .dash-head { align-items:stretch; flex-direction:column; } .vehicle-list { grid-template-columns:1fr; } .form-grid { grid-template-columns:1fr; } .span-2,.span-4 { grid-column:auto; } .section-title { grid-column:auto; } .photo-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } .form-actions { flex-direction:column-reverse; } .form-actions .btn { width:100%; } }
     </style>
   </head>
@@ -165,7 +179,8 @@ const pageTitle = 'Administración · Lopez Automotores';
                   <label style="text-transform:none;letter-spacing:0;font-size:14px;">Subir fotografías
                     <input id="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple />
                   </label>
-                  <p class="muted" style="font-size:13px;margin:10px 0 0;">La primera foto será la portada. Podés seleccionar varias a la vez.</p>
+                  <p class="photo-help">La primera foto es la portada. Podés cambiarla y reordenar todas las fotos antes de guardar.</p>
+                  <p class="photo-order-note">Usá ← y → para cambiar el orden. "Hacer principal" mueve esa foto al primer lugar.</p>
                   <div id="photoGrid" class="photo-grid"></div>
                 </div>
               </div>
@@ -195,8 +210,7 @@ const pageTitle = 'Administración · Lopez Automotores';
       };
 
       let vehicles = [];
-      let existingPhotos = [];
-      let selectedFiles = [];
+      let photoItems = []; // { kind: 'old'|'new', value: url|File }
 
       function setStatus(el, msg='', type='') { el.textContent = msg; el.className = `status ${type}`; }
       function slugify(value='') { return value.toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
@@ -253,7 +267,7 @@ const pageTitle = 'Administración · Lopez Automotores';
       }
 
       function resetForm() {
-        els.vehicleForm.reset(); $('recordId').value=''; $('slug').value=''; $('publicado').checked=true; existingPhotos=[]; selectedFiles=[]; renderPhotos(); setStatus(els.formStatus,'');
+        els.vehicleForm.reset(); $('recordId').value=''; $('slug').value=''; $('publicado').checked=true; photoItems=[]; renderPhotos(); setStatus(els.formStatus,'');
       }
       function openNew() { resetForm(); els.formTitle.textContent='Nuevo vehículo'; els.formSection.classList.remove('hidden'); els.formSection.scrollIntoView({behavior:'smooth',block:'start'}); }
       function openEdit(id) {
@@ -262,29 +276,52 @@ const pageTitle = 'Administración · Lopez Automotores';
         ['marca','modelo','version','anio','kilometraje','precio','color','tipo','combustible','transmision','traccion','carroceria','plazas','descripcion'].forEach(k=>{ if($(k)) $(k).value=v[k]??''; });
         $('publicado').checked=!!v.publicado; $('destacado').checked=!!v.destacado; $('vendido').checked=!!v.vendido;
         $('motor').value=arrayToLines(v.motor); $('dimensiones').value=arrayToLines(v.dimensiones); $('confort').value=arrayToLines(v.confort); $('seguridad').value=arrayToLines(v.seguridad);
-        existingPhotos=Array.isArray(v.fotos)?[...v.fotos]:[]; renderPhotos(); els.formSection.classList.remove('hidden'); els.formSection.scrollIntoView({behavior:'smooth',block:'start'});
+        photoItems=(Array.isArray(v.fotos)?v.fotos:[]).map(url=>({kind:'old',value:url})); renderPhotos(); els.formSection.classList.remove('hidden'); els.formSection.scrollIntoView({behavior:'smooth',block:'start'});
       }
       function closeForm() { els.formSection.classList.add('hidden'); resetForm(); }
       els.newVehicleBtn.addEventListener('click',openNew); els.closeFormBtn.addEventListener('click',closeForm); els.cancelBtn.addEventListener('click',closeForm);
 
-      els.photos.addEventListener('change',()=>{ selectedFiles=[...els.photos.files]; renderPhotos(); });
+      els.photos.addEventListener('change',()=>{ const files=[...els.photos.files]; photoItems.push(...files.map(file=>({kind:'new',value:file}))); els.photos.value=''; renderPhotos(); });
+      function moveItem(arr, from, to) {
+        if (to < 0 || to >= arr.length || from === to) return;
+        const [item] = arr.splice(from, 1);
+        arr.splice(to, 0, item);
+      }
       function renderPhotos() {
-        const old=existingPhotos.map((url,i)=>`<div class="photo-item"><img src="${escapeHtml(url)}" alt="Foto existente"/><button type="button" data-old-photo="${i}" aria-label="Quitar">×</button></div>`);
-        const fresh=selectedFiles.map((file,i)=>`<div class="photo-item"><img src="${URL.createObjectURL(file)}" alt="Nueva foto"/><button type="button" data-new-photo="${i}" aria-label="Quitar">×</button></div>`);
-        els.photoGrid.innerHTML=[...old,...fresh].join('');
-        els.photoGrid.querySelectorAll('[data-old-photo]').forEach(b=>b.addEventListener('click',()=>{ existingPhotos.splice(Number(b.dataset.oldPhoto),1); renderPhotos(); }));
-        els.photoGrid.querySelectorAll('[data-new-photo]').forEach(b=>b.addEventListener('click',()=>{ selectedFiles.splice(Number(b.dataset.newPhoto),1); renderPhotos(); }));
+        els.photoGrid.innerHTML = photoItems.map((item,i)=>{
+          const src = item.kind==='old' ? item.value : URL.createObjectURL(item.value);
+          return `<div class="photo-item" data-photo-index="${i}">
+            <div class="photo-thumb">
+              <img src="${escapeHtml(src)}" alt="Foto ${i+1}" />
+              ${i===0?'<span class="photo-primary">PORTADA</span>':''}
+            </div>
+            <div class="photo-tools">
+              <button type="button" data-move-left="${i}" ${i===0?'disabled':''}>←</button>
+              <button type="button" data-move-right="${i}" ${i===photoItems.length-1?'disabled':''}>→</button>
+              ${i===0?'':`<button type="button" class="make-primary" data-primary="${i}">Hacer principal</button>`}
+              <button type="button" class="remove-photo" data-remove="${i}">Quitar</button>
+            </div>
+          </div>`;
+        }).join('');
+        els.photoGrid.querySelectorAll('[data-move-left]').forEach(b=>b.addEventListener('click',()=>{ const i=Number(b.dataset.moveLeft); moveItem(photoItems,i,i-1); renderPhotos(); }));
+        els.photoGrid.querySelectorAll('[data-move-right]').forEach(b=>b.addEventListener('click',()=>{ const i=Number(b.dataset.moveRight); moveItem(photoItems,i,i+1); renderPhotos(); }));
+        els.photoGrid.querySelectorAll('[data-primary]').forEach(b=>b.addEventListener('click',()=>{ const i=Number(b.dataset.primary); const [item]=photoItems.splice(i,1); photoItems.unshift(item); renderPhotos(); }));
+        els.photoGrid.querySelectorAll('[data-remove]').forEach(b=>b.addEventListener('click',()=>{ photoItems.splice(Number(b.dataset.remove),1); renderPhotos(); }));
       }
 
-      async function uploadPhotos(slug) {
-        const urls=[];
-        for (let i=0;i<selectedFiles.length;i++) {
-          const file=selectedFiles[i];
+      async function uploadPhotosInOrder(slug) {
+        const urls = [];
+        let newIndex = 0;
+        for (const item of photoItems) {
+          if (item.kind === 'old') { urls.push(item.value); continue; }
+          const file = item.value;
           const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
-          const path=`${slug}/${Date.now()}-${i}-${slugify(file.name.replace(/\.[^.]+$/,''))}.${ext}`;
+          const path=`${slug}/${Date.now()}-${newIndex}-${slugify(file.name.replace(/\.[^.]+$/,''))}.${ext}`;
           const { error }=await supabase.storage.from(BUCKET).upload(path,file,{cacheControl:'3600',upsert:false});
           if(error) throw error;
-          const { data }=supabase.storage.from(BUCKET).getPublicUrl(path); urls.push(data.publicUrl);
+          const { data }=supabase.storage.from(BUCKET).getPublicUrl(path);
+          urls.push(data.publicUrl);
+          newIndex++;
         }
         return urls;
       }
@@ -295,13 +332,13 @@ const pageTitle = 'Administración · Lopez Automotores';
         if(!autoSlug) return setStatus(els.formStatus,'Completá marca y modelo.','error');
         save.disabled=true; els.vehicleForm.classList.add('loading'); setStatus(els.formStatus,'Guardando…');
         try {
-          const newUrls=await uploadPhotos(autoSlug); const fotos=[...existingPhotos,...newUrls];
+          const fotos=await uploadPhotosInOrder(autoSlug);
           const payload={ slug:autoSlug, marca:$('marca').value.trim(), modelo:$('modelo').value.trim(), version:$('version').value.trim()||null, anio:$('anio').value?Number($('anio').value):null, kilometraje:$('kilometraje').value?Number($('kilometraje').value):null, precio:$('precio').value?Number($('precio').value):null, moneda:'ARS', color:$('color').value.trim()||null, tipo:$('tipo').value||null, combustible:$('combustible').value||null, transmision:$('transmision').value.trim()||null, traccion:$('traccion').value.trim()||null, carroceria:$('carroceria').value.trim()||null, plazas:$('plazas').value?Number($('plazas').value):null, descripcion:$('descripcion').value.trim()||null, motor:linesToArray($('motor').value), dimensiones:linesToArray($('dimensiones').value), confort:linesToArray($('confort').value), seguridad:linesToArray($('seguridad').value), fotos, destacado:$('destacado').checked, vendido:$('vendido').checked, publicado:$('publicado').checked, updated_at:new Date().toISOString() };
           let result;
           if(editingId) result=await supabase.from('vehiculos').update(payload).eq('id',editingId);
           else result=await supabase.from('vehiculos').insert(payload);
           if(result.error) throw result.error;
-          setStatus(els.formStatus,'Vehículo guardado correctamente.','ok'); selectedFiles=[]; await loadVehicles(); setTimeout(closeForm,650);
+          setStatus(els.formStatus,'Vehículo guardado correctamente.','ok'); photoItems=[]; await loadVehicles(); setTimeout(closeForm,650);
         } catch(err) { setStatus(els.formStatus,err?.message||'No se pudo guardar el vehículo.','error'); }
         finally { save.disabled=false; els.vehicleForm.classList.remove('loading'); }
       });

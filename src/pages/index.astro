@@ -4,6 +4,12 @@ import '../styles/global.css';
 
 const formatPrice = (value) => value > 0 ? `$${value.toLocaleString('es-AR')}` : 'Consultar precio';
 const formatKm = (value) => `${value.toLocaleString('es-AR')} km`;
+const shortTransmission = (value = '') => {
+  const v = String(value).toLowerCase();
+  if (v.includes('autom')) return 'Automática';
+  if (v.includes('manual')) return 'Manual';
+  return value;
+};
 const marcas = [...new Set(autos.map((a) => a.marca))];
 const tipos = [...new Set(autos.map((a) => a.tipo))];
 const anios = [...new Set(autos.map((a) => a.anio))].sort((a,b) => b-a);
@@ -299,7 +305,7 @@ const anios = [...new Set(autos.map((a) => a.anio))].sort((a,b) => b-a);
                     <span>{formatKm(auto.km)}</span>
                     <span>{auto.tipo}</span>
                     <span>{auto.combustible}</span>
-                    <span>{auto.transmision}</span>
+                    <span>{shortTransmission(auto.transmision)}</span>
                   </div>
 
                   <div class="vehicle-footer vehicle-footer-premium">

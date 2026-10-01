@@ -16,6 +16,18 @@ const shortTransmission = (value = '') => {
   return value;
 };
 const whatsapp = `https://wa.me/543513489872?text=${encodeURIComponent(`Hola, estoy consultando por la ${auto.marca} ${auto.modelo} ${auto.anio} que vi en la web.`)}`;
+const similarAutos = autos
+  .filter((item) => item.id !== auto.id)
+  .sort((a, b) => {
+    if (auto.precio > 0 && a.precio > 0 && b.precio > 0) {
+      return Math.abs(a.precio - auto.precio) - Math.abs(b.precio - auto.precio);
+    }
+    const aType = a.tipo === auto.tipo ? 0 : 1;
+    const bType = b.tipo === auto.tipo ? 0 : 1;
+    if (aType !== bType) return aType - bType;
+    return Math.abs(a.anio - auto.anio) - Math.abs(b.anio - auto.anio);
+  })
+  .slice(0, 6);
 ---
 <!doctype html>
 <html lang="es">
@@ -48,15 +60,15 @@ const whatsapp = `https://wa.me/543513489872?text=${encodeURIComponent(`Hola, es
 
     <main class="vehicle-detail-page">
       <div class="container detail-shell">
-        <a class="detail-back" href="/#vehiculos">← Volver al catálogo</a>
+        <a class="detail-back" href="/#vehiculos"><span class="detail-back-icon" aria-hidden="true">←</span><span>Volver al catálogo</span></a>
 
         <section class="vehicle-detail-hero">
           <div class="vehicle-gallery">
             <div class="gallery-main-wrap">
               <img id="main-image" class="gallery-main" src={auto.imagenes[0]} alt={`${auto.marca} ${auto.modelo}`} />
               <span class="gallery-count">1 / {auto.imagenes.length}</span>
-              <button class="gallery-arrow gallery-prev" type="button" aria-label="Foto anterior">‹</button>
-              <button class="gallery-arrow gallery-next" type="button" aria-label="Foto siguiente">›</button>
+              <button class="gallery-arrow gallery-prev" type="button" aria-label="Foto anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button class="gallery-arrow gallery-next" type="button" aria-label="Foto siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 5.5 6.5 6.5-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
             </div>
             <div class="gallery-thumbs" aria-label="Galería de imágenes">
               {auto.imagenes.map((img, i) => (
@@ -102,19 +114,19 @@ const whatsapp = `https://wa.me/543513489872?text=${encodeURIComponent(`Hola, es
 
         <section class="vehicle-specs-desktop">
           <div class="spec-card">
-            <div class="spec-title"><span>01</span><h2>Motor y mecánica</h2></div>
+            <div class="spec-title"><h2>Motor y mecánica</h2></div>
             <ul>{auto.motor.map(item => <li>{item}</li>)}</ul>
           </div>
           <div class="spec-card">
-            <div class="spec-title"><span>02</span><h2>Dimensiones y capacidades</h2></div>
+            <div class="spec-title"><h2>Dimensiones y capacidades</h2></div>
             <ul>{auto.dimensiones.map(item => <li>{item}</li>)}</ul>
           </div>
           <div class="spec-card">
-            <div class="spec-title"><span>03</span><h2>Confort y tecnología</h2></div>
+            <div class="spec-title"><h2>Confort y tecnología</h2></div>
             <ul>{auto.confort.map(item => <li>{item}</li>)}</ul>
           </div>
           <div class="spec-card">
-            <div class="spec-title"><span>04</span><h2>Seguridad</h2></div>
+            <div class="spec-title"><h2>Seguridad</h2></div>
             <ul>{auto.seguridad.map(item => <li>{item}</li>)}</ul>
           </div>
         </section>
@@ -125,6 +137,34 @@ const whatsapp = `https://wa.me/543513489872?text=${encodeURIComponent(`Hola, es
           <details><summary>Confort y tecnología <span>+</span></summary><ul>{auto.confort.map(item => <li>{item}</li>)}</ul></details>
           <details><summary>Seguridad <span>+</span></summary><ul>{auto.seguridad.map(item => <li>{item}</li>)}</ul></details>
         </section>
+        {similarAutos.length > 0 && (
+          <section class="similar-section" aria-labelledby="similar-title">
+            <div class="similar-head">
+              <div>
+                <span class="similar-eyebrow">TAMBIÉN TE PUEDE INTERESAR</span>
+                <h2 id="similar-title">Vehículos similares</h2>
+              </div>
+              <a href="/#vehiculos">Ver todo el stock <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="similar-carousel">
+              {similarAutos.map((item) => (
+                <a class="similar-card" href={`/vehiculos/${item.id}`}>
+                  <div class="similar-image-wrap">
+                    <img src={item.imagenes?.[0] || '/images/placeholder-car.svg'} alt={`${item.marca} ${item.modelo}`} />
+                    <span>{item.anio}</span>
+                  </div>
+                  <div class="similar-card-body">
+                    <small>{item.marca}</small>
+                    <h3>{item.modelo}</h3>
+                    <div class="similar-meta"><span>{formatKm(item.km)}</span><span>{item.tipo}</span></div>
+                    <strong>{formatPrice(item.precio)}</strong>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
+
       </div>
     </main>
 

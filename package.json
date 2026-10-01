@@ -1,6 +1,6 @@
 {
   "name": "lopez-catalogo",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
@@ -8,6 +8,7 @@
     "preview": "astro preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
     "astro": "^5.13.7"
   }
 }

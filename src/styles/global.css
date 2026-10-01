@@ -1039,3 +1039,9 @@ a.contact-row:hover strong { color: #ff5964; }
   .similar-card{border-radius:15px}
   .similar-card-body{padding:14px 14px 15px}
 }
+
+
+/* V29 — asegurar que los filtros oculten tarjetas aunque la card use display !important */
+.vehicle-card[hidden] {
+  display: none !important;
+}

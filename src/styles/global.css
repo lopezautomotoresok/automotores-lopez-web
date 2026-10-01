@@ -1045,3 +1045,29 @@ a.contact-row:hover strong { color: #ff5964; }
 .vehicle-card[hidden] {
   display: none !important;
 }
+
+
+/* V34 — estados del vehículo */
+.vehicle-reserved-chip{
+  position:absolute!important;
+  top:56px!important;
+  right:14px!important;
+  z-index:2!important;
+  min-height:30px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0 11px!important;
+  border-radius:999px!important;
+  background:#f0a400!important;
+  color:#101112!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  font-size:9.5px!important;
+  font-weight:950!important;
+  letter-spacing:.08em!important;
+  text-transform:uppercase!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.22)!important;
+}
+@media(max-width:700px){
+  .vehicle-reserved-chip{top:50px!important;right:12px!important;min-height:28px!important;padding:0 9px!important;font-size:9px!important;}
+}

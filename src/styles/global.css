@@ -1071,3 +1071,50 @@ a.contact-row:hover strong { color: #ff5964; }
 @media(max-width:700px){
   .vehicle-reserved-chip{top:50px!important;right:12px!important;min-height:28px!important;padding:0 9px!important;font-size:9px!important;}
 }
+
+
+/* V35 — badges de estado apilados debajo del año */
+.vehicle-badges-stack{
+  position:absolute!important;
+  top:14px!important;
+  right:14px!important;
+  z-index:3!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-end!important;
+  gap:7px!important;
+  pointer-events:none!important;
+}
+.vehicle-badges-stack .vehicle-year-chip,
+.vehicle-badges-stack .vehicle-status,
+.vehicle-badges-stack .vehicle-reserved-chip{
+  position:static!important;
+  top:auto!important;
+  right:auto!important;
+  left:auto!important;
+  margin:0!important;
+}
+.vehicle-badges-stack .vehicle-status{
+  min-height:30px!important;
+  padding:0 11px!important;
+  background:#1f7a62!important;
+  color:#fff!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.22)!important;
+}
+.vehicle-badges-stack .vehicle-reserved-chip{
+  min-height:30px!important;
+  padding:0 11px!important;
+  background:#c98a16!important;
+  color:#111!important;
+}
+@media(max-width:700px){
+  .vehicle-badges-stack{
+    top:12px!important;
+    right:12px!important;
+    gap:6px!important;
+  }
+  .vehicle-badges-stack .vehicle-year-chip{min-height:31px!important;padding:0 10px!important;font-size:11px!important;}
+  .vehicle-badges-stack .vehicle-status,
+  .vehicle-badges-stack .vehicle-reserved-chip{min-height:28px!important;padding:0 9px!important;font-size:9px!important;}
+}

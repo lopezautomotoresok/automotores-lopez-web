@@ -161,7 +161,7 @@ import '../styles/global.css';
 
     <main id="top">
       <section class="hero">
-        <img class="hero-bg" src="/images/fiat-toro-volcano-2017-01.png" alt="Vehículo disponible en Automotores Lopez" />
+        <img id="heroBanner" class="hero-bg" src="/images/fiat-toro-volcano-2017-01.png" alt="Vehículo disponible en Lopez Automotores" />
         <div class="hero-overlay"></div>
         <div class="hero-glow"></div>
 
@@ -354,6 +354,21 @@ import '../styles/global.css';
     <script>
       import { supabase } from '../lib/supabase.js';
 
+      const BANNER_BUCKET = 'vehiculos';
+      const BANNER_PATH = 'site/banner-current';
+      const heroBanner = document.querySelector('#heroBanner');
+      function loadDynamicBanner() {
+        if(!heroBanner) return;
+        const { data } = supabase.storage.from(BANNER_BUCKET).getPublicUrl(BANNER_PATH);
+        const url=data?.publicUrl;
+        if(!url) return;
+        const candidate=url + '?v=' + Date.now();
+        const preloader=new Image();
+        preloader.onload=()=>{ heroBanner.src=candidate; };
+        preloader.onerror=()=>{};
+        preloader.src=candidate;
+      }
+
       const search = document.querySelector('#search');
       const brand = document.querySelector('#brand');
       const year = document.querySelector('#year');
@@ -441,6 +456,7 @@ import '../styles/global.css';
       quickTrack?.addEventListener('touchend',startQuickAutoplay,{passive:true});
       quickTrack?.addEventListener('scroll',()=>{ if(!isQuickMobile()||!quickCards.length)return; const x=quickTrack.scrollLeft+quickTrack.clientWidth/2; let nearest=0,distance=Infinity; quickCards.forEach((card,i)=>{const center=card.offsetLeft+card.offsetWidth/2,d=Math.abs(center-x); if(d<distance){distance=d;nearest=i;}}); quickIndex=nearest; },{passive:true});
       window.addEventListener('resize',startQuickAutoplay); startQuickAutoplay();
+      loadDynamicBanner();
       loadCatalog();
     </script>
   </body>

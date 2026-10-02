@@ -385,7 +385,7 @@ import '../styles/global.css';
             <a class="vehicle-image-wrap" href="${href}" aria-label="Ver ${esc(name)}">
               <img class="vehicle-image" src="${esc(image)}" alt="${esc(name)}" loading="lazy" />
               <div class="vehicle-image-overlay"></div>
-              ${v.destacado ? `<span class="vehicle-status">Nuevo ingreso</span>` : ''}${v.anio ? `<span class="vehicle-year-chip">${esc(v.anio)}</span>` : ''}${v.reservado ? `<span class="vehicle-reserved-chip">Reservado</span>` : ''}
+              <div class="vehicle-badges-stack">${v.anio ? `<span class="vehicle-year-chip">${esc(v.anio)}</span>` : ''}${v.destacado ? `<span class="vehicle-status">Nuevo ingreso</span>` : ''}${v.reservado ? `<span class="vehicle-reserved-chip">Reservado</span>` : ''}</div>
             </a>
             <div class="vehicle-body">
               <div class="vehicle-title-block"><div class="vehicle-brand">${esc(v.marca||'')}</div><h3>${esc(title(v))}</h3></div>

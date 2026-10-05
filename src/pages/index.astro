@@ -161,7 +161,7 @@ import '../styles/global.css';
 
     <main id="top">
       <section class="hero">
-        <img id="heroBanner" class="hero-bg" src="/images/fiat-toro-volcano-2017-01.png" alt="Vehículo disponible en Lopez Automotores" />
+        <img id="heroBanner" class="hero-bg" alt="Vehículo disponible en Lopez Automotores" hidden />
         <div class="hero-overlay"></div>
         <div class="hero-glow"></div>
 
@@ -357,16 +357,30 @@ import '../styles/global.css';
       const BANNER_BUCKET = 'vehiculos';
       const BANNER_PATH = 'site/banner-current';
       const heroBanner = document.querySelector('#heroBanner');
+      function revealHeroBanner(src) {
+        if(!heroBanner || !src) return;
+        heroBanner.src = src;
+        heroBanner.hidden = false;
+      }
+
       function loadDynamicBanner() {
         if(!heroBanner) return;
         const { data } = supabase.storage.from(BANNER_BUCKET).getPublicUrl(BANNER_PATH);
-        const url=data?.publicUrl;
-        if(!url) return;
-        const candidate=url + '?v=' + Date.now();
-        const preloader=new Image();
-        preloader.onload=()=>{ heroBanner.src=candidate; };
-        preloader.onerror=()=>{};
-        preloader.src=candidate;
+        const url = data?.publicUrl;
+        const fallback = '/images/fiat-toro-volcano-2017-01.png';
+        if(!url) { revealHeroBanner(fallback); return; }
+
+        // No mostramos una imagen vieja mientras llega el banner actual.
+        // Primero precargamos la imagen de Supabase y recién entonces la hacemos visible.
+        const candidate = url + '?v=' + Date.now();
+        const preloader = new Image();
+        preloader.onload = () => revealHeroBanner(candidate);
+        preloader.onerror = () => {
+          const fallbackLoader = new Image();
+          fallbackLoader.onload = () => revealHeroBanner(fallback);
+          fallbackLoader.src = fallback;
+        };
+        preloader.src = candidate;
       }
 
       const search = document.querySelector('#search');
@@ -437,7 +451,7 @@ import '../styles/global.css';
         vehicles = data || [];
         const brands=[...new Set(vehicles.map(v=>v.marca).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
         const years=[...new Set(vehicles.map(v=>v.anio).filter(Boolean))].sort((a,b)=>b-a);
-        const types=[...new Set(vehicles.map(v=>v.tipo).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+        const types=[...new Set([...vehicles.map(v=>v.tipo).filter(Boolean), 'Utilitario'])].sort((a,b)=>a.localeCompare(b,'es'));
         fillSelect(brand,brands,'Todas las marcas'); fillSelect(year,years,'Todos los años'); fillSelect(type,types,'Todos los tipos');
         renderCards();
       }

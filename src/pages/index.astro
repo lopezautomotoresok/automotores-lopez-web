@@ -451,7 +451,7 @@ import '../styles/global.css';
         vehicles = data || [];
         const brands=[...new Set(vehicles.map(v=>v.marca).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
         const years=[...new Set(vehicles.map(v=>v.anio).filter(Boolean))].sort((a,b)=>b-a);
-        const types=[...new Set([...vehicles.map(v=>v.tipo).filter(Boolean), 'Utilitario'])].sort((a,b)=>a.localeCompare(b,'es'));
+        const types=[...new Set(vehicles.map(v=>v.tipo).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
         fillSelect(brand,brands,'Todas las marcas'); fillSelect(year,years,'Todos los años'); fillSelect(type,types,'Todos los tipos');
         renderCards();
       }
